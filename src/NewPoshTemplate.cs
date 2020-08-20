@@ -50,9 +50,17 @@ namespace PoshProject
 
         protected override void ProcessRecord()
         {
+            if (MyInvocation.BoundParameters.ContainsKey("FilePath"))
+            {
+                if (!(FilePath.Contains(".xml")))
+                {
+                    FilePath += $"\\{ProjectName}.xml";
+                }
+            }
+
             if (!(MyInvocation.BoundParameters.ContainsKey("FilePath")))
             {
-                FilePath = Directory.GetCurrentDirectory() + $"\\{ProjectName}Template.xml";
+                FilePath = Directory.GetCurrentDirectory() + $"\\{ProjectName}.xml";
             }
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Author")))
@@ -62,10 +70,27 @@ namespace PoshProject
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Directories")))
             {
-                Directories = new string[]
+                if (ProjectType == "Script")
                 {
-                    "Classes", "Private", "Public", "docs", "en-US", "Tests"
-                };
+                    Directories = new string[] { $"{ProjectName}.tests.ps1" };
+                }
+
+                else if (ProjectType == "Module")
+                {
+                    Directories = new string[]
+                    {
+                        "Classes", "Private", "Public", "docs", "en-US", "Tests"
+                    };
+                }
+
+                else
+                {
+                    Directories = new string[]
+                    {
+                        "Output", ProjectName, "src", "docs", "en-US", "Tests"
+                    };
+                }
+
             }
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Description")))
@@ -89,11 +114,6 @@ namespace PoshProject
             if (!(MyInvocation.BoundParameters.ContainsKey("Version")))
             {
                 Version = "0.1.0";
-            }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("Dependencies")))
-            {
-                Dependencies = null;
             }
 
             ProjectTemplate.NewTemplate(ProjectName, FilePath, ProjectType, Author, Directories, Description, Id, Tags, Version);

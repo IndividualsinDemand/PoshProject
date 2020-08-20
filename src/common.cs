@@ -21,7 +21,7 @@ namespace PoshProject
                 writer.WriteElementString("Type", type);
                 writer.WriteStartElement("Metadata");
                 writer.WriteElementString("Author", author);
-                writer.WriteElementString("Path", path.Replace("Template.xml", ".psd1"));
+                writer.WriteElementString("Path", path.Replace(".xml", ".psd1"));
                 writer.WriteElementString("Root", $"{projectName}.psm1");
                 writer.WriteElementString("Description", description);
                 writer.WriteElementString("Guid", id);
