@@ -5,7 +5,7 @@ using System.Management.Automation;
 namespace PoshProject
 {
     [Cmdlet(VerbsCommon.Get, "PoshTemplate")]
-    [OutputType(typeof(PoshProjectTemplate))]
+    [OutputType(typeof(PoshTemplate))]
     public class GetPoshTemplate : PSCmdlet
     {
         [Parameter(
@@ -14,25 +14,48 @@ namespace PoshProject
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public string FilePath { get; set; }
+        public string TemplatePath { get; set; }
 
         protected override void ProcessRecord()
         {
-            PoshProjectTemplate template = new PoshProjectTemplate();
-            WriteObject(template);
+            if (!(MyInvocation.BoundParameters.ContainsKey("TemplatePath")))
+            {
+                PoshTemplate poshTemplate = new PoshTemplate
+                {
+                    ProjectName = "PoshProjectTemplate",
+                    Directories = "PoshProjectTemplate.tests.ps1",
+                    Type = "Script",
+                    Dependencies = ""
+                };
+
+                Metadata metadata = new Metadata()
+                {
+                    Author = Environment.UserName,
+                    RootModule = "PoshProjectTemplate.psm1",
+                    Tags = string.Join(",", "PoshProject", "PoshTemplate", "PoshProjectTemplate"),
+                    Description = "A simple project scaffolding module for PowerShell",
+                    Guid = Guid.NewGuid(),
+                    ModuleVersion = "0.1.0",
+                    Path = Directory.GetCurrentDirectory() + "\\PoshProjectTemplate.psd1"
+                };
+
+                poshTemplate.Metadata = metadata;
+
+                WriteObject(poshTemplate);
+            }
+
+            else
+            {
+                if (!(File.Exists(TemplatePath)))
+                {
+                    ProjectTemplate.HandleFileNotFoundException();
+                }
+
+                else
+                {
+                    WriteObject(ProjectTemplate.GetTemplate(TemplatePath));
+                }                
+            }
         }
-    }
-
-    public class PoshProjectTemplate
-    {
-        public string ProjectName { get; set; } = "PoshProjectTemplate";
-        public string FilePath { get; set; } = Directory.GetCurrentDirectory() + "\\PoshProjectTemplate.xml";
-        public string Author { get; set; } = Environment.UserName;
-        public string[] Directories { get; set; } = new string[] { "Classes", "Private", "Public", "docs", "en-US", "Tests"  };
-        public string Description { get; set; } = "PowerShell project template creation module";
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public string[] Tags { get; set; } = new string[] { "PowerShell", "Project", "ProjectTemplate", "PowerShellTemplate", "PSProject", "PoshProject" };
-        public string Version { get; set; } = "0.1.0";
-
     }
 }

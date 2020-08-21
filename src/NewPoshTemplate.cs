@@ -42,11 +42,15 @@ namespace PoshProject
 
         [Parameter(Mandatory = false)]
         [ValidateNotNullOrEmpty()]
-        public string Id { get; set; }
+        public Guid Guid { get; set; }
 
         [Parameter(Mandatory = false)]
         [ValidateNotNullOrEmpty()]
         public string Version { get; set; }
+
+        [Parameter(Mandatory = false)]
+        [ValidateNotNullOrEmpty()]
+        public string[] DependsOn { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -108,7 +112,7 @@ namespace PoshProject
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Id")))
             {
-                Id = Guid.NewGuid().ToString();
+                Guid = Guid.NewGuid();
             }
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Version")))
@@ -116,7 +120,12 @@ namespace PoshProject
                 Version = "0.1.0";
             }
 
-            ProjectTemplate.NewTemplate(ProjectName, FilePath, ProjectType, Author, Directories, Description, Id, Tags, Version);
+            if (!(MyInvocation.BoundParameters.ContainsKey("DependsOn")))
+            {
+                DependsOn = new string[] { null };
+            }
+
+            ProjectTemplate.NewTemplate(ProjectName, FilePath, ProjectType, Author, Directories, Description, Guid.ToString(), Tags, Version, DependsOn);
         }
     }
 }
