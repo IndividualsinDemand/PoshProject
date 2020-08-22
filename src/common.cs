@@ -61,6 +61,37 @@ namespace PoshProject
         {
             throw new FileNotFoundException("Couldn't find the part of file from given file path");
         }
+
+        public static FileLoadException HandleFileLoadException()
+        {
+            throw new FileLoadException("Invalid Template; Load the correct template and try again");
+        }
+
+        public static bool TestTemplate(string path)
+        {
+            bool _valid = false;
+
+            try
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(PoshTemplate), new XmlRootAttribute("Configuration"));
+
+                StringReader stringReader = new StringReader(File.ReadAllText(path));
+
+                PoshTemplate poshTemplate = (PoshTemplate)xmlSerializer.Deserialize(stringReader);
+
+                if (string.IsNullOrEmpty(poshTemplate.ToString()))
+                {
+                    _valid = true;
+                }
+
+                return _valid;
+            }
+
+            catch
+            {
+                return _valid;
+            }
+        }
     }
 
     public class PoshTemplate

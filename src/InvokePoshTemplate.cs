@@ -11,7 +11,8 @@ namespace PoshProject
             Mandatory = false,
             Position = 0,
             ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = "Path")]
         [ValidateNotNullOrEmpty()]
         public string TemplatePath { get; set; }
 
@@ -19,12 +20,13 @@ namespace PoshProject
             Mandatory = false,
             Position = 1,
             ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = "Object")]
         [ValidateNotNullOrEmpty()]
-        public PoshTemplate TemplateObject { get; set; }
+        public PoshTemplate poshTemplate { get; set; }
         protected override void ProcessRecord()
         {
-            if (MyInvocation.BoundParameters.ContainsKey("TemplatePath"))
+            if (ParameterSetName == "Path")
             {
                 if (!(File.Exists(TemplatePath)))
                 {
@@ -33,37 +35,39 @@ namespace PoshProject
 
                 else
                 {
+                    PoshTemplate poshTemplate = ProjectTemplate.GetTemplate(TemplatePath);
+
                     // Creating Project
-                    var projectPath = TemplateObject.Metadata.Path.Replace(".psd1", "");
+                    var projectPath = poshTemplate.Metadata.Path.Replace(".psd1", "");
 
                     // Creating Project Directory
                     Directory.CreateDirectory(projectPath);
 
                     // Creating module file
-                    File.Create($"{projectPath}\\{TemplateObject.Metadata.RootModule}");
+                    File.Create($"{projectPath}\\{poshTemplate.Metadata.RootModule}");
 
                     // Creating Module Manifest
                     PowerShell ps = PowerShell.Create().AddCommand("New-ModuleManifest")
-                                                       .AddParameter("Author", TemplateObject.Metadata.Author)
-                                                       .AddParameter("Description", TemplateObject.Metadata.Description)
-                                                       .AddParameter("Guid", TemplateObject.Metadata.Guid)
-                                                       .AddParameter("ModuleVersion", TemplateObject.Metadata.ModuleVersion)
-                                                       .AddParameter("Path", $"{projectPath}\\{TemplateObject.ProjectName}.psd1")
-                                                       .AddParameter("Tags", TemplateObject.Metadata.Tags.Split(','))
-                                                       .AddParameter("RootModule", TemplateObject.Metadata.RootModule);
+                                                       .AddParameter("Author", poshTemplate.Metadata.Author)
+                                                       .AddParameter("Description", poshTemplate.Metadata.Description)
+                                                       .AddParameter("Guid", poshTemplate.Metadata.Guid)
+                                                       .AddParameter("ModuleVersion", poshTemplate.Metadata.ModuleVersion)
+                                                       .AddParameter("Path", $"{projectPath}\\{poshTemplate.ProjectName}.psd1")
+                                                       .AddParameter("Tags", poshTemplate.Metadata.Tags.Split(','))
+                                                       .AddParameter("RootModule", poshTemplate.Metadata.RootModule);
 
                     ps.Invoke();
 
-                    if (TemplateObject.Type == "Script")
+                    if (poshTemplate.Type == "Script")
                     {
                         // Creating Directories (in this case it will be a .tests file)
-                        File.Create($"{projectPath}\\{TemplateObject.Directories}");
+                        File.Create($"{projectPath}\\{poshTemplate.Directories}");
                     }
 
                     else
                     {
                         // Creating Directories
-                        string[] directories = TemplateObject.Directories.Split(',');
+                        string[] directories = poshTemplate.Directories.Split(',');
 
                         foreach (string dir in directories)
                         {
@@ -73,9 +77,9 @@ namespace PoshProject
                 }
             }
 
-            else if (MyInvocation.BoundParameters.ContainsKey("TemplateObject"))
+            else if (ParameterSetName == "Object")
             {
-                if (TemplateObject.GetType() != typeof(PoshTemplate))
+                if (poshTemplate.GetType() != typeof(PoshTemplate))
                 {
                     throw new TypeLoadException("Invalid template object; Run Get-PoshTemplate to obtain the correct type and re-run the cmdlet again");
                 }
@@ -83,36 +87,36 @@ namespace PoshProject
                 else
                 {
                     // Creating Project
-                    var projectPath = TemplateObject.Metadata.Path.Replace(".psd1", "");
+                    var projectPath = poshTemplate.Metadata.Path.Replace(".psd1", "");
 
                     // Creating Project Directory
                     Directory.CreateDirectory(projectPath);
 
                     // Creating module file
-                    File.Create($"{projectPath}\\{TemplateObject.Metadata.RootModule}");
+                    File.Create($"{projectPath}\\{poshTemplate.Metadata.RootModule}");
 
                     // Creating Module Manifest
                     PowerShell ps = PowerShell.Create().AddCommand("New-ModuleManifest")
-                                                       .AddParameter("Author", TemplateObject.Metadata.Author)
-                                                       .AddParameter("Description", TemplateObject.Metadata.Description)
-                                                       .AddParameter("Guid", TemplateObject.Metadata.Guid)
-                                                       .AddParameter("ModuleVersion", TemplateObject.Metadata.ModuleVersion)
-                                                       .AddParameter("Path", $"{projectPath}\\{TemplateObject.ProjectName}.psd1")
-                                                       .AddParameter("Tags", TemplateObject.Metadata.Tags.Split(','))
-                                                       .AddParameter("RootModule", TemplateObject.Metadata.RootModule);
+                                                       .AddParameter("Author", poshTemplate.Metadata.Author)
+                                                       .AddParameter("Description", poshTemplate.Metadata.Description)
+                                                       .AddParameter("Guid", poshTemplate.Metadata.Guid)
+                                                       .AddParameter("ModuleVersion", poshTemplate.Metadata.ModuleVersion)
+                                                       .AddParameter("Path", $"{projectPath}\\{poshTemplate.ProjectName}.psd1")
+                                                       .AddParameter("Tags", poshTemplate.Metadata.Tags.Split(','))
+                                                       .AddParameter("RootModule", poshTemplate.Metadata.RootModule);
 
                     ps.Invoke();
 
-                    if (TemplateObject.Type == "Script")
+                    if (poshTemplate.Type == "Script")
                     {
                         // Creating Directories (in this case it will be a .tests file)
-                        File.Create($"{projectPath}\\{TemplateObject.Directories}");
+                        File.Create($"{projectPath}\\{poshTemplate.Directories}");
                     }
 
                     else
                     {
                         // Creating Directories
-                        string[] directories = TemplateObject.Directories.Split(',');
+                        string[] directories = poshTemplate.Directories.Split(',');
 
                         foreach (string dir in directories)
                         {
@@ -124,7 +128,7 @@ namespace PoshProject
 
             else
             {
-                WriteWarning("Pass the template file or template object from Get-PoshTemplate cmdlet to create the project!!");
+                WriteObject("Pass the template file or template object from Get-PoshTemplate cmdlet to create the project!!");
             }
         }
     }

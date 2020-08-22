@@ -110,7 +110,7 @@ namespace PoshProject
                 };
             }
 
-            if (!(MyInvocation.BoundParameters.ContainsKey("Id")))
+            if (!(MyInvocation.BoundParameters.ContainsKey("Guid")))
             {
                 Guid = Guid.NewGuid();
             }
