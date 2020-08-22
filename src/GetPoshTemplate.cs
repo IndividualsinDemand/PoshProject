@@ -53,7 +53,16 @@ namespace PoshProject
 
                 else
                 {
-                    WriteObject(ProjectTemplate.GetTemplate(TemplatePath));
+                    if (ProjectTemplate.TestTemplate(TemplatePath))
+                    {
+                        WriteObject(ProjectTemplate.GetTemplate(TemplatePath));
+                    }
+
+                    else
+                    {
+                        ProjectTemplate.HandleFileLoadException();
+                    }
+                    
                 }                
             }
         }

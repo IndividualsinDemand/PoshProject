@@ -7,7 +7,9 @@ namespace PoshProject
 {
     public class ProjectTemplate
     {
-        public static void NewTemplate(string projectName, string path, string type, string author, string[] directories, string description, 
+        private string XmlRootAttributeValue { get; set; } = "Configuration";
+
+        public static void NewTemplate(string projectName, string path, string type, string author, string[] directories, string description,
             string id, string[] tags, string version, string[] dependsOn)
         {
             XmlWriterSettings settings = new XmlWriterSettings
@@ -37,11 +39,14 @@ namespace PoshProject
             }
         }
 
-        public static PoshTemplate GetTemplate(string path)
+        public static PoshTemplate DeserializeTemplate(string path)
         {
             try
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(PoshTemplate), new XmlRootAttribute("Configuration"));
+
+                ProjectTemplate template = new ProjectTemplate();
+
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(PoshTemplate), new XmlRootAttribute(template.XmlRootAttributeValue));
 
                 StringReader stringReader = new StringReader(File.ReadAllText(path));
 
@@ -52,9 +57,8 @@ namespace PoshProject
 
             catch
             {
-                throw new FileLoadException("Invalid Template; Load the correct template and try again");
+                throw HandleFileLoadException();
             }
-            
         }
 
         public static FileNotFoundException HandleFileNotFoundException()
@@ -67,30 +71,29 @@ namespace PoshProject
             throw new FileLoadException("Invalid Template; Load the correct template and try again");
         }
 
-        public static bool TestTemplate(string path)
+        public static PoshTemplate GetTemplate(string path)
         {
-            bool _valid = false;
-
             try
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(PoshTemplate), new XmlRootAttribute("Configuration"));
-
-                StringReader stringReader = new StringReader(File.ReadAllText(path));
-
-                PoshTemplate poshTemplate = (PoshTemplate)xmlSerializer.Deserialize(stringReader);
-
-                if (string.IsNullOrEmpty(poshTemplate.ToString()))
-                {
-                    _valid = true;
-                }
-
-                return _valid;
+                return DeserializeTemplate(path);
             }
 
             catch
             {
-                return _valid;
+                throw HandleFileLoadException();
             }
+        }        
+
+        public static bool TestTemplate(string path)
+        {
+            bool _valid = false;
+
+            if (! (string.IsNullOrEmpty(DeserializeTemplate(path).ToString())))
+            {
+                _valid = true;
+            }
+
+            return _valid;
         }
     }
 
