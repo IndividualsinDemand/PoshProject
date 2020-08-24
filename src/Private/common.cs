@@ -57,30 +57,31 @@ namespace PoshProject
 
             catch
             {
-                throw HandleFileLoadException();
+                return null;
             }
         }
 
-        public static FileNotFoundException HandleFileNotFoundException()
+        public static void FileNotFound()
         {
-            throw new FileNotFoundException("Couldn't find the part of file from given file path");
+            WriteMessage(GetSign("err"), "File not Found");
         }
 
-        public static FileLoadException HandleFileLoadException()
+        public static void InvalidTemplate()
         {
-            throw new FileLoadException("Invalid Template; Load the correct template and try again");
+            WriteMessage(GetSign("err"), "Invalid Template");
         }
 
         public static PoshTemplate GetTemplate(string path)
         {
-            try
+
+            if (DeserializeTemplate(path) != null)
             {
                 return DeserializeTemplate(path);
             }
 
-            catch
+            else
             {
-                throw HandleFileLoadException();
+                return null;
             }
         }        
 
@@ -88,7 +89,7 @@ namespace PoshProject
         {
             bool _valid = false;
 
-            if (! (string.IsNullOrEmpty(DeserializeTemplate(path).ToString())))
+            if (DeserializeTemplate(path) != null)
             {
                 _valid = true;
             }
@@ -96,7 +97,7 @@ namespace PoshProject
             return _valid;
         }
 
-        public static void CreateManifest(PoshTemplate template, string path)
+        private static void CreateManifest(PoshTemplate template, string path)
         {
             XmlTemplate projectTemplate = new XmlTemplate();
 
@@ -112,42 +113,82 @@ namespace PoshProject
 
             ps.Invoke();
         }
-    }
 
-    public class XmlTemplate
-    {
-        public string XmlRootAttributeValue { get; set; } = "Configuration";
-        public string Metadata { get; set; } = "Metadata";
-        public string ProjectName { get; set; } = "ProjectName";
-        public string Directories { get; set; } = "Directories";
-        public string Type { get; set; } = "Type";
-        public string Dependencies { get; set; } = "Dependencies";
-        public string Author { get; set; } = "Author";
-        public string Path { get; set; } = "Path";
-        public string RootModule { get; set; } = "RootModule";
-        public string Description { get; set; } = "Description";
-        public string Guid { get; set; } = "Guid";
-        public string Tags { get; set; } = "Tags";
-        public string ModuleVersion { get; set; } = "ModuleVersion";
-    }
+        public static void WriteMessage(string sign, string message)
+        {
+            // Saving the current settings
+            ConsoleColor currentForeground = Console.ForegroundColor;
 
-    public class PoshTemplate
-    {
-        public string ProjectName { get; set; }
-        public string Directories { get; set; }
-        public string Type { get; set; }
-        public string Dependencies { get; set; }
-        public Metadata Metadata { get; set; }
-    }
+            if (sign == GetSign("err"))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
 
-    public class Metadata
-    {
-        public string Author { get; set; }
-        public string Path { get; set; }
-        public string RootModule { get; set; }
-        public string Description { get; set; }
-        public Guid Guid { get; set; }
-        public string Tags { get; set; }
-        public string ModuleVersion { get; set; }
+            else if (sign == GetSign("info"))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+
+            string consoleMessage = $"{sign} {message}";
+            
+            Console.WriteLine(consoleMessage);
+
+            // setting back to same color.
+            Console.ForegroundColor = currentForeground;
+        }
+
+        public static void CreateProject(PoshTemplate template)
+        {
+            string sign = GetSign("info");
+
+            // Creating Project
+            WriteMessage(sign, "Creating Project");
+            var projectPath = template.Metadata.Path.Replace(".psd1", "");
+
+            // Creating Project Directory
+            WriteMessage(sign, "Creating Project Directory");
+            Directory.CreateDirectory(projectPath);
+
+            // Creating module file
+            WriteMessage(sign, "Creating Root Module");
+            File.Create($"{projectPath}\\{template.Metadata.RootModule}");
+
+            // Creating manifest
+            WriteMessage(sign, "Creating Module Manifest");
+            CreateManifest(template, projectPath);
+
+            if (template.Type == "Script")
+            {
+                // Creating Directories (in this case it will be a .tests file)
+                WriteMessage(sign, "Creating Pester Tests File");
+                File.Create($"{projectPath}\\{template.Directories}");
+            }
+
+            else
+            {
+                // Creating Directories
+                WriteMessage(sign, "Creating Project Directories");
+                string[] directories = template.Directories.Split(',');
+
+                foreach (string dir in directories)
+                {
+                    WriteMessage(sign, $"Creating {dir}");
+                    Directory.CreateDirectory($"{projectPath}\\{dir}");
+                }
+            }
+        }
+
+        public static string GetSign(string message)
+        {
+            switch (message)
+            {
+                case "err":
+                    return "[-]";
+                case "info":
+                    return "[+]";
+                default:
+                    return "[-]";
+            }
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace PoshProject
             {
                 if (!(File.Exists(TemplatePath)))
                 {
-                    ProjectTemplate.HandleFileNotFoundException();
+                    ProjectTemplate.FileNotFound();
                 }
 
                 else
@@ -60,7 +60,7 @@ namespace PoshProject
 
                     else
                     {
-                        ProjectTemplate.HandleFileLoadException();
+                        ProjectTemplate.InvalidTemplate();
                     }
                     
                 }                
