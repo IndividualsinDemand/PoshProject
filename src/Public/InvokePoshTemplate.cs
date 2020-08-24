@@ -37,8 +37,17 @@ namespace PoshProject
                 {
                     if (ProjectTemplate.TestTemplate(TemplatePath))
                     {
-                        PoshTemplate template = ProjectTemplate.GetTemplate(TemplatePath);
-                        ProjectTemplate.CreateProject(template);
+                        if (ProjectTemplate.ValidateTemplate(TemplatePath) == 0)
+                        {
+                            PoshTemplate template = ProjectTemplate.GetTemplate(TemplatePath);
+                            ProjectTemplate.CreateProject(template);
+                        }
+
+                        else
+                        {
+                            ProjectTemplate.InvalidTemplate();
+                            ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Run Test-PoshTemplate cmdlet to validate the template");
+                        }                        
                     }
                     
                     else
@@ -57,7 +66,16 @@ namespace PoshProject
 
                 else
                 {
-                    ProjectTemplate.CreateProject(TemplateObject);
+                    if (ProjectTemplate.ValidateTemplateObject(TemplateObject) == 0)
+                    {
+                        ProjectTemplate.CreateProject(TemplateObject);
+                    }
+
+                    else
+                    {
+                        ProjectTemplate.InvalidTemplate();
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Run Test-PoshTemplate cmdlet to validate the template");
+                    }
                 }
             }
         }

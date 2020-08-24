@@ -7,7 +7,9 @@ using System.Xml.Serialization;
 namespace PoshProject
 {
     public class ProjectTemplate
-    {       
+    {
+        public int _errorCount { get; set; } = 0;
+
         public static void NewTemplate(string projectName, string path, string type, string author, string[] directories, string description,
             string id, string[] tags, string version, string[] dependsOn)
         {
@@ -189,6 +191,150 @@ namespace PoshProject
                 default:
                     return "[-]";
             }
+        }
+
+        public static int ValidateTemplate(string path)
+        {
+            ProjectTemplate projectTemplate = new ProjectTemplate();
+
+            if (TestTemplate(path))
+            {                
+                var template = GetTemplate(path);
+                bool _isManifest = template.Metadata.Path.Contains(".psd1");
+
+                if (string.IsNullOrEmpty(template.ProjectName))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Directories))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Type))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Metadata.Author))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Metadata.Description))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Metadata.Path))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (!(_isManifest))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Metadata.ModuleVersion))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Metadata.RootModule))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (!template.Metadata.RootModule.Contains(".psm1"))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                if (string.IsNullOrEmpty(template.Metadata.Tags))
+                {
+                    projectTemplate._errorCount += 1;
+                }
+
+                return projectTemplate._errorCount;
+            }
+            
+            return projectTemplate._errorCount;
+        }
+
+        public static int ValidateTemplateObject(PoshTemplate templateObject)
+        {
+            ProjectTemplate projectTemplate = new ProjectTemplate();
+
+            bool _isManifest = templateObject.Metadata.Path.Contains(".psd1");
+
+            if (string.IsNullOrEmpty(templateObject.ProjectName))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Directories))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Type))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Metadata.Author))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Metadata.Description))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Metadata.Path))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (!(_isManifest))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Metadata.Guid.ToString()))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Metadata.ModuleVersion))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Metadata.RootModule))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (!templateObject.Metadata.RootModule.Contains(".psm1"))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            if (string.IsNullOrEmpty(templateObject.Metadata.Tags))
+            {
+                projectTemplate._errorCount += 1;
+            }
+
+            return projectTemplate._errorCount;
         }
     }
 }
