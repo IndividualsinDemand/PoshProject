@@ -128,7 +128,7 @@ namespace PoshProject
 
             else
             {
-                WriteObject("Pass the template file or template object from Get-PoshTemplate cmdlet to create the project!!");
+                WriteObject("Pass the template file or template object to create the project!!");
             }
         }
     }
