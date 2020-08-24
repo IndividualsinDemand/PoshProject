@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Management.Automation;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -94,6 +95,23 @@ namespace PoshProject
 
             return _valid;
         }
+
+        public static void CreateManifest(PoshTemplate template, string path)
+        {
+            XmlTemplate projectTemplate = new XmlTemplate();
+
+            // Creating Module Manifest
+            PowerShell ps = PowerShell.Create().AddCommand("New-ModuleManifest")
+                                               .AddParameter(projectTemplate.Author, template.Metadata.Author)
+                                               .AddParameter(projectTemplate.Description, template.Metadata.Description)
+                                               .AddParameter(projectTemplate.Guid, template.Metadata.Guid)
+                                               .AddParameter(projectTemplate.ModuleVersion, template.Metadata.ModuleVersion)
+                                               .AddParameter(projectTemplate.Path, $"{path}\\{template.ProjectName}.psd1")
+                                               .AddParameter(projectTemplate.Tags, template.Metadata.Tags.Split(','))
+                                               .AddParameter(projectTemplate.RootModule, template.Metadata.RootModule);
+
+            ps.Invoke();
+        }
     }
 
     public class XmlTemplate
@@ -105,7 +123,7 @@ namespace PoshProject
         public string Type { get; set; } = "Type";
         public string Dependencies { get; set; } = "Dependencies";
         public string Author { get; set; } = "Author";
-        public string Path { get; set; } = "Metadata";
+        public string Path { get; set; } = "Path";
         public string RootModule { get; set; } = "RootModule";
         public string Description { get; set; } = "Description";
         public string Guid { get; set; } = "Guid";

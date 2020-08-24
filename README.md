@@ -11,4 +11,6 @@ the file and folders as defined in the xml template.
 
 ## TODO
 
-Contents here.
+- Add License
+- Unit test and output types
+- Folder contents

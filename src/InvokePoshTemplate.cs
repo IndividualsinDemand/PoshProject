@@ -4,11 +4,11 @@ using System.Management.Automation;
 
 namespace PoshProject
 {
-    [Cmdlet(VerbsLifecycle.Invoke, "PoshTemplate")]
+    [Cmdlet(VerbsLifecycle.Invoke, "PoshTemplate", DefaultParameterSetName = "Path")]
     public class InvokePoshTemplate : PSCmdlet
     {
         [Parameter(
-            Mandatory = false,
+            Mandatory = true,
             Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
@@ -17,13 +17,13 @@ namespace PoshProject
         public string TemplatePath { get; set; }
 
         [Parameter(
-            Mandatory = false,
-            Position = 1,
+            Mandatory = true,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "Object")]
         [ValidateNotNullOrEmpty()]
-        public PoshTemplate poshTemplate { get; set; }
+        public PoshTemplate TemplateObject { get; set; }
+
         protected override void ProcessRecord()
         {
             if (ParameterSetName == "Path")
@@ -35,88 +35,30 @@ namespace PoshProject
 
                 else
                 {
-                    PoshTemplate poshTemplate = ProjectTemplate.GetTemplate(TemplatePath);
-
+                    PoshTemplate template = ProjectTemplate.GetTemplate(TemplatePath);
+                    
                     // Creating Project
-                    var projectPath = poshTemplate.Metadata.Path.Replace(".psd1", "");
+                    var projectPath = template.Metadata.Path.Replace(".psd1", "");
 
                     // Creating Project Directory
                     Directory.CreateDirectory(projectPath);
 
                     // Creating module file
-                    File.Create($"{projectPath}\\{poshTemplate.Metadata.RootModule}");
+                    File.Create($"{projectPath}\\{template.Metadata.RootModule}");
 
-                    // Creating Module Manifest
-                    PowerShell ps = PowerShell.Create().AddCommand("New-ModuleManifest")
-                                                       .AddParameter("Author", poshTemplate.Metadata.Author)
-                                                       .AddParameter("Description", poshTemplate.Metadata.Description)
-                                                       .AddParameter("Guid", poshTemplate.Metadata.Guid)
-                                                       .AddParameter("ModuleVersion", poshTemplate.Metadata.ModuleVersion)
-                                                       .AddParameter("Path", $"{projectPath}\\{poshTemplate.ProjectName}.psd1")
-                                                       .AddParameter("Tags", poshTemplate.Metadata.Tags.Split(','))
-                                                       .AddParameter("RootModule", poshTemplate.Metadata.RootModule);
+                    // Creating manifest
+                    ProjectTemplate.CreateManifest(template, projectPath);
 
-                    ps.Invoke();
-
-                    if (poshTemplate.Type == "Script")
+                    if (template.Type == "Script")
                     {
                         // Creating Directories (in this case it will be a .tests file)
-                        File.Create($"{projectPath}\\{poshTemplate.Directories}");
+                        File.Create($"{projectPath}\\{template.Directories}");
                     }
 
                     else
                     {
                         // Creating Directories
-                        string[] directories = poshTemplate.Directories.Split(',');
-
-                        foreach (string dir in directories)
-                        {
-                            Directory.CreateDirectory($"{projectPath}\\{dir}");
-                        }
-                    }
-                }
-            }
-
-            else if (ParameterSetName == "Object")
-            {
-                if (poshTemplate.GetType() != typeof(PoshTemplate))
-                {
-                    throw new TypeLoadException("Invalid template object; Run Get-PoshTemplate to obtain the correct type and re-run the cmdlet again");
-                }
-
-                else
-                {
-                    // Creating Project
-                    var projectPath = poshTemplate.Metadata.Path.Replace(".psd1", "");
-
-                    // Creating Project Directory
-                    Directory.CreateDirectory(projectPath);
-
-                    // Creating module file
-                    File.Create($"{projectPath}\\{poshTemplate.Metadata.RootModule}");
-
-                    // Creating Module Manifest
-                    PowerShell ps = PowerShell.Create().AddCommand("New-ModuleManifest")
-                                                       .AddParameter("Author", poshTemplate.Metadata.Author)
-                                                       .AddParameter("Description", poshTemplate.Metadata.Description)
-                                                       .AddParameter("Guid", poshTemplate.Metadata.Guid)
-                                                       .AddParameter("ModuleVersion", poshTemplate.Metadata.ModuleVersion)
-                                                       .AddParameter("Path", $"{projectPath}\\{poshTemplate.ProjectName}.psd1")
-                                                       .AddParameter("Tags", poshTemplate.Metadata.Tags.Split(','))
-                                                       .AddParameter("RootModule", poshTemplate.Metadata.RootModule);
-
-                    ps.Invoke();
-
-                    if (poshTemplate.Type == "Script")
-                    {
-                        // Creating Directories (in this case it will be a .tests file)
-                        File.Create($"{projectPath}\\{poshTemplate.Directories}");
-                    }
-
-                    else
-                    {
-                        // Creating Directories
-                        string[] directories = poshTemplate.Directories.Split(',');
+                        string[] directories = template.Directories.Split(',');
 
                         foreach (string dir in directories)
                         {
@@ -128,7 +70,42 @@ namespace PoshProject
 
             else
             {
-                WriteObject("Pass the template file or template object to create the project!!");
+                if (TemplateObject.GetType() != typeof(PoshTemplate))
+                {
+                    throw new TypeLoadException("Invalid template object; Run Get-PoshTemplate to obtain the correct type and re-run the cmdlet again");
+                }
+
+                else
+                {
+                    // Creating Project
+                    var projectPath = TemplateObject.Metadata.Path.Replace(".psd1", "");
+
+                    // Creating Project Directory
+                    Directory.CreateDirectory(projectPath);
+
+                    // Creating module file
+                    File.Create($"{projectPath}\\{TemplateObject.Metadata.RootModule}");
+
+                    // Creating manifest
+                    ProjectTemplate.CreateManifest(TemplateObject, projectPath);
+
+                    if (TemplateObject.Type == "Script")
+                    {
+                        // Creating Directories (in this case it will be a .tests file)
+                        File.Create($"{projectPath}\\{TemplateObject.Directories}");
+                    }
+
+                    else
+                    {
+                        // Creating Directories
+                        string[] directories = TemplateObject.Directories.Split(',');
+
+                        foreach (string dir in directories)
+                        {
+                            Directory.CreateDirectory($"{projectPath}\\{dir}");
+                        }
+                    }
+                }
             }
         }
     }
