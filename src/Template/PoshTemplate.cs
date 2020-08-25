@@ -8,6 +8,7 @@ namespace PoshProject
         public string Directories { get; set; }
         public string Type { get; set; }
         public string Dependencies { get; set; }
+        public string License { get; set; }
         public Metadata Metadata { get; set; }
     }
 

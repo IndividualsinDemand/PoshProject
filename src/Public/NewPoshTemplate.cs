@@ -52,6 +52,11 @@ namespace PoshProject
         [AllowNull()]
         public string[] DependsOn { get; set; }
 
+        [Parameter(Mandatory = false)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet("MIT", "Apache")]
+        public string License { get; set; }
+
         protected override void ProcessRecord()
         {
             if (MyInvocation.BoundParameters.ContainsKey("FilePath"))
@@ -125,7 +130,12 @@ namespace PoshProject
                 DependsOn = new string[] { null };
             }
 
-            ProjectTemplate.NewTemplate(ProjectName, FilePath, ProjectType, Author, Directories, Description, Guid.ToString(), Tags, Version, DependsOn);
+            if (!(MyInvocation.BoundParameters.ContainsKey("License")))
+            {
+                License = null;
+            }
+
+            ProjectTemplate.NewTemplate(ProjectName, FilePath, ProjectType, Author, Directories, Description, Guid.ToString(), Tags, Version, DependsOn, License);
         }
     }
 }

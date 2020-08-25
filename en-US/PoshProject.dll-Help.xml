@@ -353,6 +353,22 @@ Metadata     : PoshProject.Metadata</dev:code>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>License</maml:name>
+          <maml:Description>
+            <maml:para>{{ Fill License Description }}</maml:para>
+          </maml:Description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">MIT</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Apache</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ProjectType</maml:name>
           <maml:Description>
             <maml:para>Type of the project.</maml:para>
@@ -468,6 +484,18 @@ Metadata     : PoshProject.Metadata</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>License</maml:name>
+        <maml:Description>
+          <maml:para>{{ Fill License Description }}</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
         <maml:name>ProjectName</maml:name>
         <maml:Description>
@@ -568,7 +596,8 @@ Metadata     : PoshProject.Metadata</dev:code>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>`Test-PoshTemplate` cmdlet helps you to test the PoshTemplate file and reports if the template is valid or not. An invalid template error will be thrown  if the `Guid` in the template is invalid.</maml:para>
+      <maml:para>`Test-PoshTemplate` cmdlet helps you to test the PoshTemplate file and reports if the template is valid or not. An invalid template error will be thrown  if the `Guid` in the template is invalid. If the `Guid` tag is removed from the template, the validation will be passed as the tamplate object automatically creates a dummy `Guid` and maps it with the `PoshTemplate` object.</maml:para>
+      <maml:para>Tags not included in template validation are 1. Dependencies 2. License.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>

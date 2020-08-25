@@ -18,7 +18,10 @@ Test-PoshTemplate [-TemplatePath] <String> [<CommonParameters>]
 
 ## DESCRIPTION
 `Test-PoshTemplate` cmdlet helps you to test the PoshTemplate file and reports if the template is valid or not. An invalid template error will be thrown 
-if the `Guid` in the template is invalid.
+if the `Guid` in the template is invalid. If the `Guid` tag is removed from the template, the validation will be passed as the tamplate object
+automatically creates a dummy `Guid` and maps it with the `PoshTemplate` object.
+
+Tags not included in template validation are 1. Dependencies 2. License.
 
 ## EXAMPLES
 

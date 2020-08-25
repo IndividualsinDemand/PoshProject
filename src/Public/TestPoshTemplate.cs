@@ -27,6 +27,7 @@ namespace PoshProject
                     var template = ProjectTemplate.GetTemplate(TemplatePath);
                     XmlTemplate xmlTemplate = new XmlTemplate();
                     bool _isManifest = template.Metadata.Path.Contains(".psd1");
+                    string guid = template.Metadata.Guid.ToString();
 
                     if (string.IsNullOrEmpty(template.ProjectName))
                     {
@@ -70,13 +71,13 @@ namespace PoshProject
                         _errorCount += 1;
                     }
 
-                    if (string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
+                    if (string.IsNullOrEmpty(guid))
                     {
                         ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Guid}> is empty");
                         _errorCount += 1;
                     }
 
-                    if (! string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
+                    if (! string.IsNullOrEmpty(guid))
                     {
                         if (!ProjectTemplate.IsGuid(template.Metadata.Guid))
                         {

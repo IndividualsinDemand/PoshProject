@@ -15,7 +15,7 @@ schema: 2.0.0
 ```
 New-PoshTemplate [-ProjectName] <String> [[-FilePath] <String>] [-ProjectType <String>] [-Author <String>]
  [-Directories <String[]>] [-Description <String>] [-Tags <String[]>] [-Guid <Guid>] [-Version <String>]
- [-DependsOn <String[]>] [<CommonParameters>]
+ [-DependsOn <String[]>] [-License <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -116,6 +116,22 @@ Guid of the project/module.
 Type: Guid
 Parameter Sets: (All)
 Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -License
+{{ Fill License Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+Accepted values: MIT, Apache
 
 Required: False
 Position: Named

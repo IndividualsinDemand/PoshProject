@@ -12,7 +12,7 @@ namespace PoshProject
         public int _errorCount { get; set; } = 0;
 
         public static void NewTemplate(string projectName, string path, string type, string author, string[] directories, string description,
-            string id, string[] tags, string version, string[] dependsOn)
+            string id, string[] tags, string version, string[] dependsOn, string license)
         {
             XmlTemplate projectTemplate = new XmlTemplate();
 
@@ -29,6 +29,7 @@ namespace PoshProject
                 writer.WriteElementString(projectTemplate.Directories, string.Join(",", directories));
                 writer.WriteElementString(projectTemplate.Type, type);
                 writer.WriteElementString(projectTemplate.Dependencies, string.Join(",", dependsOn));
+                writer.WriteElementString(projectTemplate.License, license);
                 writer.WriteStartElement(projectTemplate.Metadata);
                 writer.WriteElementString(projectTemplate.Author, author);
                 writer.WriteElementString(projectTemplate.Path, path.Replace(".xml", ".psd1"));
@@ -199,6 +200,7 @@ namespace PoshProject
         public static void CreateProject(PoshTemplate template)
         {
             string sign = GetSign("info");
+            TemplateContents contents = new TemplateContents();
 
             // Creating Project
             WriteMessage(sign, "Creating Project");
@@ -208,10 +210,6 @@ namespace PoshProject
             WriteMessage(sign, "Creating Project Directory");
             Directory.CreateDirectory(projectPath);
 
-            // Creating module file
-            WriteMessage(sign, "Creating Root Module");
-            File.Create($"{projectPath}\\{template.Metadata.RootModule}");
-
             // Creating manifest
             WriteMessage(sign, "Creating Module Manifest");
             CreateManifest(template, projectPath);
@@ -220,11 +218,19 @@ namespace PoshProject
             {
                 // Creating Directories (in this case it will be a .tests file)
                 WriteMessage(sign, "Creating Pester Tests File");
-                File.Create($"{projectPath}\\{template.Directories}");
+                File.WriteAllText($"{projectPath}\\{template.Directories}", contents.TestContents);
+
+                // Creating module file
+                WriteMessage(sign, "Creating Root Module");
+                File.WriteAllText($"{projectPath}\\{template.Metadata.RootModule}", contents.FunctionContents);
             }
 
             else
             {
+                // Creating module file
+                WriteMessage(sign, "Creating Root Module");
+                File.Create($"{projectPath}\\{template.Metadata.RootModule}");
+
                 // Creating Directories
                 WriteMessage(sign, "Creating Project Directories");
                 string[] directories = template.Directories.Split(',');
@@ -233,6 +239,37 @@ namespace PoshProject
                 {
                     WriteMessage(sign, $"Creating {dir}");
                     Directory.CreateDirectory($"{projectPath}\\{dir}");
+
+                    if(dir == "Classes")
+                    {
+                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Class.ps1", contents.ClassContents);
+                    }
+
+                    else if (dir == "Public")
+                    {
+                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.ps1", contents.FunctionContents);
+                    }
+
+                    else if (dir == "Tests" || dir == "Test" || dir == "tests" || dir == "test")
+                    {
+                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Tests.ps1", contents.TestContents);
+                    }
+                }
+            }
+
+            // Adding License
+            if (template.License != null)
+            {
+                WriteMessage(sign, $"Adding License");
+
+                if (template.License == "MIT")
+                {
+                    File.WriteAllText($"{projectPath}\\License", contents.MIT.Replace("@AuthorName", template.Metadata.Author));
+                }
+
+                else if (template.License == "Apache")
+                {
+                    File.WriteAllText($"{projectPath}\\License", contents.Apache.Replace("@AuthorName", template.Metadata.Author));
                 }
             }
 
@@ -269,6 +306,7 @@ namespace PoshProject
             {                
                 var template = GetTemplate(path);
                 bool _isManifest = template.Metadata.Path.Contains(".psd1");
+                string guid = template.Metadata.Guid.ToString();
 
                 if (string.IsNullOrEmpty(template.ProjectName))
                 {
@@ -305,12 +343,12 @@ namespace PoshProject
                     projectTemplate._errorCount += 1;
                 }
 
-                if (string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
+                if (string.IsNullOrEmpty(guid))
                 {
                     projectTemplate._errorCount += 1;
                 }
 
-                if (! string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
+                if (! string.IsNullOrEmpty(guid))
                 {
                     if(! IsGuid(template.Metadata.Guid))
                     {
@@ -349,6 +387,7 @@ namespace PoshProject
             ProjectTemplate projectTemplate = new ProjectTemplate();
 
             bool _isManifest = templateObject.Metadata.Path.Contains(".psd1");
+            string guid = templateObject.Metadata.Guid.ToString();
 
             if (string.IsNullOrEmpty(templateObject.ProjectName))
             {
@@ -385,12 +424,12 @@ namespace PoshProject
                 projectTemplate._errorCount += 1;
             }
 
-            if (string.IsNullOrEmpty(templateObject.Metadata.Guid.ToString()))
+            if (string.IsNullOrEmpty(guid))
             {
                 projectTemplate._errorCount += 1;
             }
 
-            if (!string.IsNullOrEmpty(templateObject.Metadata.Guid.ToString()))
+            if (!string.IsNullOrEmpty(guid))
             {
                 if (!IsGuid(templateObject.Metadata.Guid))
                 {

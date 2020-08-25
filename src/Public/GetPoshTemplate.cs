@@ -25,7 +25,8 @@ namespace PoshProject
                     ProjectName = "PoshProjectTemplate",
                     Directories = "PoshProjectTemplate.tests.ps1",
                     Type = "Script",
-                    Dependencies = ""
+                    Dependencies = "",
+                    License = "MIT"
                 };
 
                 Metadata metadata = new Metadata()

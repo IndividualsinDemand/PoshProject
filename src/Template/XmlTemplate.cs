@@ -8,6 +8,8 @@
         public string Directories { get; set; } = "Directories";
         public string Type { get; set; } = "Type";
         public string Dependencies { get; set; } = "Dependencies";
+        public string License { get; set; } = "License";
+
         public string Author { get; set; } = "Author";
         public string Path { get; set; } = "Path";
         public string RootModule { get; set; } = "RootModule";
