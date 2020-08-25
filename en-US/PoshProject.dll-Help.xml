@@ -72,7 +72,7 @@
       <command:example>
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Get-PoshTemplate
-PS C:\&gt; ProjectName  : PoshProjectTemplate
+ProjectName  : PoshProjectTemplate
 Directories  : PoshProjectTemplate.tests.ps1
 Type         : Script
 Dependencies :
@@ -84,7 +84,7 @@ Metadata     : PoshProject.Metadata</dev:code>
       <command:example>
         <maml:title>-------------------------- Example 2 --------------------------</maml:title>
         <dev:code>PS C:\&gt; ".\MyModule.xml" | Get-PoshTemplate
-PS C:\&gt; ProjectName  : MyModule
+ProjectName  : MyModule
 Directories  : MyModule.tests.ps1
 Type         : Script
 Dependencies : psAzD,PSDB
@@ -212,7 +212,7 @@ Metadata     : PoshProject.Metadata</dev:code>
       <command:example>
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Invoke-PoshTemplate -TemplatePath .\MyModule.xml
-PS C:\&gt; [+] Creating Project
+[+] Creating Project
 [+] Creating Project Directory
 [+] Creating Root Module
 [+] Creating Module Manifest
@@ -224,7 +224,7 @@ PS C:\&gt; [+] Creating Project
       <command:example>
         <maml:title>-------------------------- Example 2 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Invoke-PoshTemplate -TemplateObject (Get-PoshTemplate -TemplatePath .\MyModule.xml)
-PS C:\&gt; [+] Creating Project
+[+] Creating Project
 [+] Creating Project Directory
 [+] Creating Root Module
 [+] Creating Module Manifest
@@ -236,7 +236,7 @@ PS C:\&gt; [+] Creating Project
       <command:example>
         <maml:title>-------------------------- Example 3 --------------------------</maml:title>
         <dev:code>PS C:\&gt; ".\MyModule.xml" | Get-PoshTemplate | Invoke-PoshTemplate
-PS C:\&gt; [+] Creating Project
+[+] Creating Project
 [+] Creating Project Directory
 [+] Creating Root Module
 [+] Creating Module Manifest
@@ -630,7 +630,7 @@ PS C:\&gt; [+] Creating Project
       <command:example>
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Test-PoshTemplate -TemplatePath .\MyModule.xml
-PS C:\&gt; [+] Error Count: 0
+[+] Error Count: 0
 [+] Valid Template</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
@@ -639,7 +639,7 @@ PS C:\&gt; [+] Error Count: 0
       <command:example>
         <maml:title>-------------------------- Example 2 --------------------------</maml:title>
         <dev:code>PS C:\&gt; "\MyNewModule.xml" | Test-PoshTemplate
-PS C:\&gt; [-] &lt;ProjectName&gt; is empty
+[-] &lt;ProjectName&gt; is empty
 [-] &lt;Directories&gt; are empty
 [-] &lt;Type&gt; is empty
 [-] Invalid path: 'C:\MyNewModule.ps1'
