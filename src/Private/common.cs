@@ -352,7 +352,7 @@ namespace PoshProject
 
             if (!string.IsNullOrEmpty(templateObject.Metadata.Guid.ToString()))
             {
-                if (!IsGuid(template.Metadata.Guid))
+                if (!IsGuid(templateObject.Metadata.Guid))
                 {
                     projectTemplate._errorCount += 1;
                 }
