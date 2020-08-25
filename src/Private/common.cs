@@ -157,6 +157,11 @@ namespace PoshProject
                     }
                 }
             }
+
+            else
+            {
+                WriteMessage(GetSign("info"), "No dependencies found");
+            }
         }
 
         public static void WriteMessage(string sign, string message)
