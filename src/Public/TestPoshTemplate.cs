@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Management.Automation;
-using System.Text.RegularExpressions;
 
 namespace PoshProject
 {
@@ -79,9 +78,7 @@ namespace PoshProject
 
                     if (! string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
                     {
-                        Regex regex = new Regex(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$");
-
-                        if (!regex.IsMatch(template.Metadata.Guid.ToString()))
+                        if (!ProjectTemplate.IsGuid(template.Metadata.Guid))
                         {
                             ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Invalid Guid");
                             _errorCount += 1;

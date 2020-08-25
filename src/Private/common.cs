@@ -194,6 +194,13 @@ namespace PoshProject
             }
         }
 
+        public static bool IsGuid(Guid Guid)
+        {
+            Regex regex = new Regex(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$");
+
+            return regex.IsMatch(Guid.ToString());
+        }
+
         public static int ValidateTemplate(string path)
         {
             ProjectTemplate projectTemplate = new ProjectTemplate();
@@ -245,12 +252,10 @@ namespace PoshProject
 
                 if (! string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
                 {
-                    Regex regex = new Regex(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$");
-
-                    if (! regex.IsMatch(template.Metadata.Guid.ToString()))
+                    if(! IsGuid(template.Metadata.Guid))
                     {
                         projectTemplate._errorCount += 1;
-                    }
+                    }                    
                 }
 
                 if (string.IsNullOrEmpty(template.Metadata.ModuleVersion))
@@ -323,6 +328,14 @@ namespace PoshProject
             if (string.IsNullOrEmpty(templateObject.Metadata.Guid.ToString()))
             {
                 projectTemplate._errorCount += 1;
+            }
+
+            if (!string.IsNullOrEmpty(templateObject.Metadata.Guid.ToString()))
+            {
+                if (!IsGuid(template.Metadata.Guid))
+                {
+                    projectTemplate._errorCount += 1;
+                }
             }
 
             if (string.IsNullOrEmpty(templateObject.Metadata.ModuleVersion))
