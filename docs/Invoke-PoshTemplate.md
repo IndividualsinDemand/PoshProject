@@ -32,7 +32,7 @@ pass the template object from `Get-PoshTemplate` for project scaffolding.
 ### Example 1
 ```powershell
 PS C:\> Invoke-PoshTemplate -TemplatePath .\MyModule.xml
-PS C:\> [+] Creating Project
+[+] Creating Project
 [+] Creating Project Directory
 [+] Creating Root Module
 [+] Creating Module Manifest
@@ -42,7 +42,7 @@ PS C:\> [+] Creating Project
 ### Example 2
 ```powershell
 PS C:\> Invoke-PoshTemplate -TemplateObject (Get-PoshTemplate -TemplatePath .\MyModule.xml)
-PS C:\> [+] Creating Project
+[+] Creating Project
 [+] Creating Project Directory
 [+] Creating Root Module
 [+] Creating Module Manifest
@@ -52,7 +52,7 @@ PS C:\> [+] Creating Project
 ### Example 3
 ```powershell
 PS C:\> ".\MyModule.xml" | Get-PoshTemplate | Invoke-PoshTemplate
-PS C:\> [+] Creating Project
+[+] Creating Project
 [+] Creating Project Directory
 [+] Creating Root Module
 [+] Creating Module Manifest

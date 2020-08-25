@@ -24,7 +24,7 @@ Get-PoshTemplate [[-TemplatePath] <String>] [<CommonParameters>]
 ### Example 1
 ```powershell
 PS C:\> Get-PoshTemplate
-PS C:\> ProjectName  : PoshProjectTemplate
+ProjectName  : PoshProjectTemplate
 Directories  : PoshProjectTemplate.tests.ps1
 Type         : Script
 Dependencies :
@@ -34,7 +34,7 @@ Metadata     : PoshProject.Metadata
 ### Example 2
 ```powershell
 PS C:\> ".\MyModule.xml" | Get-PoshTemplate
-PS C:\> ProjectName  : MyModule
+ProjectName  : MyModule
 Directories  : MyModule.tests.ps1
 Type         : Script
 Dependencies : psAzD,PSDB

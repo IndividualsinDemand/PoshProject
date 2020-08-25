@@ -25,14 +25,14 @@ if the `Guid` in the template is invalid.
 ### Example 1
 ```powershell
 PS C:\> Test-PoshTemplate -TemplatePath .\MyModule.xml
-PS C:\> [+] Error Count: 0
+[+] Error Count: 0
 [+] Valid Template
 ```
 
 ### Example 2
 ```powershell
 PS C:\> "\MyNewModule.xml" | Test-PoshTemplate
-PS C:\> [-] <ProjectName> is empty
+[-] <ProjectName> is empty
 [-] <Directories> are empty
 [-] <Type> is empty
 [-] Invalid path: 'C:\MyNewModule.ps1'
