@@ -120,17 +120,42 @@ namespace PoshProject
         public static void InstallDependencies(PoshTemplate template)
         {
             // Installing dependencies
-            string[] dependencies = template.Dependencies.Split(',');
-
-            foreach (string module in dependencies)
+            if (!string.IsNullOrEmpty(template.Dependencies))
             {
-                PowerShell ps = PowerShell.Create().AddCommand("Install-Module")
-                                                   .AddParameter("Name", module)
-                                                   .AddParameter("Scope", "CurrentUser")
-                                                   .AddParameter("Force", true)
-                                                   .AddParameter("AllowClobber", true);
+                string[] dependencies = template.Dependencies.Split(',');
+                string _result = null;
 
-                ps.Invoke();
+                foreach (string module in dependencies)
+                {
+
+                    WriteMessage(GetSign("info"), $"Installing {module}");
+
+                    try
+                    {
+                        PowerShell ps = PowerShell.Create().AddCommand("Install-Module")
+                                                           .AddParameter("Name", module)
+                                                           .AddParameter("Scope", "CurrentUser")
+                                                           .AddParameter("Force", true)
+                                                           .AddParameter("AllowClobber", true);
+
+                        ps.Invoke();
+                    }
+
+                    catch
+                    {
+                        _result = null;
+                    }
+
+                    if (_result != null)
+                    {
+                        WriteMessage(GetSign("info"), $"Successfully installed: {module}");
+                    }
+
+                    else
+                    {
+                        WriteMessage(GetSign("err"), $"Installation failed: {module}");
+                    }
+                }
             }
         }
 
