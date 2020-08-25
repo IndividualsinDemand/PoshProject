@@ -127,6 +127,7 @@ namespace PoshProject
 
                 foreach (string module in dependencies)
                 {
+                    module.Trim(',');
 
                     WriteMessage(GetSign("info"), $"Installing {module}");
 
