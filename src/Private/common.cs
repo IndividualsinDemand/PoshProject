@@ -117,6 +117,23 @@ namespace PoshProject
             ps.Invoke();
         }
 
+        public static void InstallDependencies(PoshTemplate template)
+        {
+            // Installing dependencies
+            string[] dependencies = template.Dependencies.Split(',');
+
+            foreach (string module in dependencies)
+            {
+                PowerShell ps = PowerShell.Create().AddCommand("Install-Module")
+                                                   .AddParameter("Name", module)
+                                                   .AddParameter("Scope", "CurrentUser")
+                                                   .AddParameter("Force", true)
+                                                   .AddParameter("AllowClobber", true);
+
+                ps.Invoke();
+            }
+        }
+
         public static void WriteMessage(string sign, string message)
         {
             // Saving the current settings
@@ -179,6 +196,9 @@ namespace PoshProject
                     Directory.CreateDirectory($"{projectPath}\\{dir}");
                 }
             }
+
+            // Installing Dependencies
+            InstallDependencies(template);
         }
 
         public static string GetSign(string message)
