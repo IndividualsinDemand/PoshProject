@@ -139,6 +139,8 @@ namespace PoshProject
                                                            .AddParameter("AllowClobber", true);
 
                         ps.Invoke();
+
+                        _result += 1;
                     }
 
                     catch
