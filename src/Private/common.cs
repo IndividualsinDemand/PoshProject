@@ -198,6 +198,7 @@ namespace PoshProject
             }
 
             // Installing Dependencies
+            WriteMessage(sign, "Installing Dependencies");
             InstallDependencies(template);
         }
 
