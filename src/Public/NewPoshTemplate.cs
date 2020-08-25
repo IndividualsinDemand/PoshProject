@@ -49,7 +49,7 @@ namespace PoshProject
         public string Version { get; set; }
 
         [Parameter(Mandatory = false)]
-        [ValidateNotNullOrEmpty()]
+        [AllowNull()]
         public string[] DependsOn { get; set; }
 
         protected override void ProcessRecord()

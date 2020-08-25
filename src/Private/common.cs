@@ -103,6 +103,12 @@ namespace PoshProject
         private static void CreateManifest(PoshTemplate template, string path)
         {
             XmlTemplate projectTemplate = new XmlTemplate();
+            string[] dependencies = null; 
+
+            if (! string.IsNullOrEmpty(template.Dependencies))
+            {
+                dependencies = template.Dependencies.Split(',');
+            }
 
             // Creating Module Manifest
             PowerShell ps = PowerShell.Create().AddCommand("New-ModuleManifest")
@@ -112,6 +118,7 @@ namespace PoshProject
                                                .AddParameter(projectTemplate.ModuleVersion, template.Metadata.ModuleVersion)
                                                .AddParameter(projectTemplate.Path, $"{path}\\{template.ProjectName}.psd1")
                                                .AddParameter(projectTemplate.Tags, template.Metadata.Tags.Split(','))
+                                               .AddParameter(projectTemplate.RequiredModules, dependencies)
                                                .AddParameter(projectTemplate.RootModule, template.Metadata.RootModule);
 
             ps.Invoke();

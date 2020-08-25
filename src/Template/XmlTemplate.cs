@@ -15,5 +15,7 @@
         public string Guid { get; set; } = "Guid";
         public string Tags { get; set; } = "Tags";
         public string ModuleVersion { get; set; } = "ModuleVersion";
+        public string RequiredModules { get; set; } = "RequiredModules";
+
     }
 }
