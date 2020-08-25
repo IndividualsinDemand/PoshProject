@@ -26,53 +26,54 @@ namespace PoshProject
                 {
 
                     var template = ProjectTemplate.GetTemplate(TemplatePath);
+                    XmlTemplate xmlTemplate = new XmlTemplate();
                     bool _isManifest = template.Metadata.Path.Contains(".psd1");
 
                     if (string.IsNullOrEmpty(template.ProjectName))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Project name is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.ProjectName}> is empty");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Directories))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Directories are empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Directories}> are empty");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Type))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Project Type is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Type}> is empty");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Metadata.Author))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Author name is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Author}> is empty");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Metadata.Description))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Description is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Description}> is empty");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Metadata.Path))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Path is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Path}> is empty");
                         _errorCount += 1;
                     }
 
                     if (! (_isManifest))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"Invalid path: {template.Metadata.Path}");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"Invalid path: '{template.Metadata.Path}'");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Metadata.Guid.ToString()))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Guid is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Guid}> is empty");
                         _errorCount += 1;
                     }
 
@@ -89,25 +90,25 @@ namespace PoshProject
 
                     if (string.IsNullOrEmpty(template.Metadata.ModuleVersion))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Module version is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.ModuleVersion}> is empty");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Metadata.RootModule))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Root Module is empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.RootModule}> is empty");
                         _errorCount += 1;
                     }
 
                     if (! template.Metadata.RootModule.Contains(".psm1"))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"Invalid root module name: {template.Metadata.RootModule}");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"Invalid root module name: '{template.Metadata.RootModule}'");
                         _errorCount += 1;
                     }
 
                     if (string.IsNullOrEmpty(template.Metadata.Tags))
                     {
-                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Tags are empty");
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Tags}> are empty");
                         _errorCount += 1;
                     }
 
