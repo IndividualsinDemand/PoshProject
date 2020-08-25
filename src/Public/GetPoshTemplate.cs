@@ -37,7 +37,7 @@ namespace PoshProject
                     Description = "A simple project scaffolding module for PowerShell",
                     Guid = Guid.NewGuid(),
                     ModuleVersion = "0.1.0",
-                    Path = Directory.GetCurrentDirectory() + "\\PoshProjectTemplate.psd1"
+                    Path = Directory.GetCurrentDirectory() + "/PoshProjectTemplate.psd1"
                 };
 
                 poshTemplate.Metadata = metadata;

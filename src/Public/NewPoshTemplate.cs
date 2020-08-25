@@ -63,13 +63,13 @@ namespace PoshProject
             {
                 if (!(FilePath.Contains(".xml")))
                 {
-                    FilePath += $"\\{ProjectName}.xml";
+                    FilePath += $"/{ProjectName}.xml";
                 }
             }
 
             if (!(MyInvocation.BoundParameters.ContainsKey("FilePath")))
             {
-                FilePath = Directory.GetCurrentDirectory() + $"\\{ProjectName}.xml";
+                FilePath = Directory.GetCurrentDirectory() + $"/{ProjectName}.xml";
             }
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Author")))
