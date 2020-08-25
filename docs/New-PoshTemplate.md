@@ -8,7 +8,7 @@ schema: 2.0.0
 # New-PoshTemplate
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+`New-PoshTemplate` cmdlet creates an xml template file for passed configuration or for a project name. 
 
 ## SYNTAX
 
@@ -19,21 +19,24 @@ New-PoshTemplate [-ProjectName] <String> [[-FilePath] <String>] [-ProjectType <S
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+`New-PoshTemplate` cmdlet creates an xml template file for passed configuration or for a project name. This cmdlet helps you to define 
+your project name, PowerShell manifest file mandatory details and custom directories for your project. It allows three types of projects,
+`Script`, `Module` and `Binary`. All the defined files and folders are created based on this.
+
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> "MyNewModule" | New-PoshTemplate
 ```
 
-{{ Add example description here }}
+Creates a PoshTemplate file populated with project settings.
 
 ## PARAMETERS
 
 ### -Author
-{{ Fill Author Description }}
+Module author name. This will be used to created module manifest file.
 
 ```yaml
 Type: String
@@ -48,7 +51,7 @@ Accept wildcard characters: False
 ```
 
 ### -DependsOn
-{{ Fill DependsOn Description }}
+Project dependencies. Provide the external module names that your project depends on.
 
 ```yaml
 Type: String[]
@@ -63,7 +66,7 @@ Accept wildcard characters: False
 ```
 
 ### -Description
-{{ Fill Description Description }}
+Provide the description of your project.
 
 ```yaml
 Type: String
@@ -78,7 +81,7 @@ Accept wildcard characters: False
 ```
 
 ### -Directories
-{{ Fill Directories Description }}
+Array of directories to be created as a part of the project. By default it will create a predefined folders and files based on the Project Type.
 
 ```yaml
 Type: String[]
@@ -93,7 +96,7 @@ Accept wildcard characters: False
 ```
 
 ### -FilePath
-{{ Fill FilePath Description }}
+Provide the path to create template file. If not provided the template file will be created in present working directory.
 
 ```yaml
 Type: String
@@ -108,7 +111,7 @@ Accept wildcard characters: False
 ```
 
 ### -Guid
-{{ Fill Guid Description }}
+Guid of the project/module.
 
 ```yaml
 Type: Guid
@@ -123,7 +126,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProjectName
-{{ Fill ProjectName Description }}
+Name of your project.
 
 ```yaml
 Type: String
@@ -138,7 +141,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProjectType
-{{ Fill ProjectType Description }}
+Type of the project.
 
 ```yaml
 Type: String
@@ -154,7 +157,7 @@ Accept wildcard characters: False
 ```
 
 ### -Tags
-{{ Fill Tags Description }}
+Define tags to identify your project.
 
 ```yaml
 Type: String[]
@@ -169,7 +172,7 @@ Accept wildcard characters: False
 ```
 
 ### -Version
-{{ Fill Version Description }}
+Provide the version number for your module.
 
 ```yaml
 Type: String
@@ -196,3 +199,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+[Invoke-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Invoke-PoshTemplate.md)

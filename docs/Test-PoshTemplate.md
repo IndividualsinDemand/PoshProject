@@ -8,7 +8,7 @@ schema: 2.0.0
 # Test-PoshTemplate
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+`Test-PoshTemplate` cmdlet is intended to test the PoshTemplate file.
 
 ## SYNTAX
 
@@ -17,21 +17,37 @@ Test-PoshTemplate [-TemplatePath] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+`Test-PoshTemplate` cmdlet helps you to test the PoshTemplate file and reports if the template is valid or not. An invalid template error will be thrown 
+if the `Guid` in the template is invalid.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Test-PoshTemplate -TemplatePath .\MyModule.xml
+PS C:\> [+] Error Count: 0
+[+] Valid Template
 ```
 
-{{ Add example description here }}
+### Example 2
+```powershell
+PS C:\> "\MyNewModule.xml" | Test-PoshTemplate
+PS C:\> [-] <ProjectName> is empty
+[-] <Directories> are empty
+[-] <Type> is empty
+[-] Invalid path: 'C:\MyNewModule.ps1'
+[-] Invalid root module name: 'MyNewModule.psm'
+[-] Error Count: 5
+[-] Template validation failed
+```
+
+If there is any empty field except `Dependencies` this cmdlet will fail the validation. It checks for each tag in the xml and validates `Guid` too. If `Guid` is found
+to be invalid, an **Invalid Template** error will be thrown.
 
 ## PARAMETERS
 
 ### -TemplatePath
-{{ Fill TemplatePath Description }}
+Provide the path to template file.
 
 ```yaml
 Type: String
@@ -59,3 +75,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+[Get-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Get-PoshTemplate.md)
