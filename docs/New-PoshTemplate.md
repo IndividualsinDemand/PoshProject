@@ -23,7 +23,6 @@ New-PoshTemplate [-ProjectName] <String> [[-FilePath] <String>] [-ProjectType <S
 your project name, PowerShell manifest file mandatory details and custom directories for your project. It allows three types of projects,
 `Script`, `Module` and `Binary`. All the defined files and folders are created based on this.
 
-
 ## EXAMPLES
 
 ### Example 1
@@ -199,4 +198,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
 [Invoke-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Invoke-PoshTemplate.md)

@@ -26,7 +26,6 @@ Invoke-PoshTemplate -TemplateObject <PoshTemplate> [<CommonParameters>]
 `Invoke-PoshTemplate` cmdlet creates the project folders and files defined in the PoshTemplate created by New-PoshTemplate cmdlet. Additionaly you can also 
 pass the template object from `Get-PoshTemplate` for project scaffolding.
 
-
 ## EXAMPLES
 
 ### Example 1
@@ -108,4 +107,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
 [Invoke-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Invoke-PoshTemplate.md)
