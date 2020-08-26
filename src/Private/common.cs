@@ -117,7 +117,7 @@ namespace PoshProject
                                                .AddParameter(projectTemplate.Description, template.Metadata.Description)
                                                .AddParameter(projectTemplate.Guid, template.Metadata.Guid)
                                                .AddParameter(projectTemplate.ModuleVersion, template.Metadata.ModuleVersion)
-                                               .AddParameter(projectTemplate.Path, $"{path}/{template.ProjectName}.psd1")
+                                               .AddParameter(projectTemplate.Path, $"{path}\\{template.ProjectName}.psd1")
                                                .AddParameter(projectTemplate.Tags, template.Metadata.Tags.Split(','))
                                                .AddParameter(projectTemplate.RequiredModules, dependencies)
                                                .AddParameter(projectTemplate.RootModule, template.Metadata.RootModule);
@@ -216,13 +216,29 @@ namespace PoshProject
 
             // Creating module file
             WriteMessage(sign, "Creating Root Module");
-            File.WriteAllText($"{projectPath}/{template.Metadata.RootModule}", contents.FunctionContents);
+            File.WriteAllText($"{projectPath}\\{template.Metadata.RootModule}", contents.FunctionContents);
+
+            // Adding License
+            if (template.License != null)
+            {
+                WriteMessage(sign, $"Adding License");
+
+                if (template.License == "MIT")
+                {
+                    File.WriteAllText($"{projectPath}\\License", contents.MIT.Replace("@AuthorName", template.Metadata.Author));
+                }
+
+                else if (template.License == "Apache")
+                {
+                    File.WriteAllText($"{projectPath}\\License", contents.Apache.Replace("@AuthorName", template.Metadata.Author));
+                }
+            }
 
             if (template.Type == "Script")
             {
                 // Creating Directories (in this case it will be a .tests file)
                 WriteMessage(sign, "Creating Pester Tests File");
-                File.WriteAllText($"{projectPath}/{template.Directories}", contents.TestContents);                
+                File.WriteAllText($"{projectPath}\\{template.Directories}", contents.TestContents);                
             }
 
             else
@@ -235,40 +251,24 @@ namespace PoshProject
                 foreach (string dir in directories)
                 {
                     WriteMessage(sign, $"Creating {dir}");
-                    Directory.CreateDirectory($"{projectPath}/{dir}");
+                    Directory.CreateDirectory($"{projectPath}\\{dir}");
 
                     if(dir == "Classes")
                     {
-                        File.WriteAllText($"{projectPath}/{dir}/{template.ProjectName}.Class.ps1", contents.ClassContents);
+                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Class.ps1", contents.ClassContents);
                     }
 
                     else if (dir == "Public")
                     {
-                        File.WriteAllText($"{projectPath}/{dir}/{template.ProjectName}.ps1", contents.FunctionContents);
+                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.ps1", contents.FunctionContents);
                     }
 
                     else if (dir == "Tests" || dir == "Test" || dir == "tests" || dir == "test")
                     {
-                        File.WriteAllText($"{projectPath}/{dir}/{template.ProjectName}.Tests.ps1", contents.TestContents);
+                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Tests.ps1", contents.TestContents);
                     }
                 }
-            }
-
-            // Adding License
-            if (template.License != null)
-            {
-                WriteMessage(sign, $"Adding License");
-
-                if (template.License == "MIT")
-                {
-                    File.WriteAllText($"{projectPath}/License", contents.MIT.Replace("@AuthorName", template.Metadata.Author));
-                }
-
-                else if (template.License == "Apache")
-                {
-                    File.WriteAllText($"{projectPath}/License", contents.Apache.Replace("@AuthorName", template.Metadata.Author));
-                }
-            }
+            }            
 
             // Installing Dependencies
             WriteMessage(sign, "Installing Dependencies");
