@@ -53,6 +53,7 @@ namespace PoshProject
                     else
                     {
                         ProjectTemplate.InvalidTemplate();
+                        ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), "Run Test-PoshTemplate cmdlet to validate the template");
                     }
                 }
             }
