@@ -75,6 +75,33 @@ namespace PoshProject
             WriteMessage(GetSign("err"), "Invalid Template");
         }
 
+        public static string GetUserName()
+        {
+            string _userName = null;
+
+            try
+            {
+                string configPath = $"{Environment.GetEnvironmentVariable("USERPROFILE")}\\.gitconfig";
+                string[] contents = File.ReadAllLines(configPath);
+                string pattern = ".*name.*";
+
+                Regex regex = new Regex(pattern);
+                
+                foreach (string content in contents)
+                {
+                    _userName = regex.Match(content).Value;
+                }
+
+                return _userName.Split('=')[1].Trim();
+            }
+
+            catch
+            {
+                return _userName;
+            }
+            
+        }
+
         public static PoshTemplate GetTemplate(string path)
         {
 

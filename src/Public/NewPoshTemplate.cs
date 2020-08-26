@@ -74,7 +74,16 @@ namespace PoshProject
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Author")))
             {
-                Author = Environment.UserName;
+                if (ProjectTemplate.GetUserName() != null)
+                {
+                    Author = ProjectTemplate.GetUserName();
+                }
+
+                else
+                {
+                    Author = Environment.UserName;
+                }
+                
             }
 
             if (!(MyInvocation.BoundParameters.ContainsKey("Directories")))
