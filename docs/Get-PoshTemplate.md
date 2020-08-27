@@ -33,7 +33,7 @@ Metadata     : PoshProject.Metadata
 
 ### Example 2
 ```powershell
-PS C:\> ".\MyModule.xml" | Get-PoshTemplate
+PS C:\> ".\PoshProjectTemplate.xml" | Get-PoshTemplate
 ProjectName  : MyModule
 Directories  : MyModule.tests.ps1
 Type         : Script
@@ -73,7 +73,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## NOTES
 
+Note that the template name should be `PoshProjectTemplate.xml` otherwise you will receive an error.
+
 ## RELATED LINKS
 
 [Get-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Get-PoshTemplate.md)
-[Test-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Test-PoshTemplate.md)

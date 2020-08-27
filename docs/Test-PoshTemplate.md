@@ -23,18 +23,20 @@ automatically creates a dummy `Guid` and maps it with the `PoshTemplate` object.
 
 Tags not included in template validation are 1. Dependencies 2. License.
 
+Template name should be `PoshProjectTemplate.xml` otherwise you will receive an error.
+
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Test-PoshTemplate -TemplatePath .\MyModule.xml
+PS C:\> Test-PoshTemplate -TemplatePath .\PoshProjectTemplate.xml
 [+] Error Count: 0
 [+] Valid Template
 ```
 
 ### Example 2
 ```powershell
-PS C:\> "\MyNewModule.xml" | Test-PoshTemplate
+PS C:\> "\PoshProjectTemplate.xml" | Test-PoshTemplate
 [-] <ProjectName> is empty
 [-] <Directories> are empty
 [-] <Type> is empty
@@ -44,8 +46,10 @@ PS C:\> "\MyNewModule.xml" | Test-PoshTemplate
 [-] Template validation failed
 ```
 
-If there is any empty field except `Dependencies` this cmdlet will fail the validation. It checks for each tag in the xml and validates `Guid` too. If `Guid` is found
+If there is any empty field except `Dependencies` and `License` this cmdlet will fail the validation. It checks for each tag in the xml and validates `Guid` too. If `Guid` is found
 to be invalid, an **Invalid Template** error will be thrown.
+
+Any change in the template name will return in error.
 
 ## PARAMETERS
 
@@ -76,6 +80,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### PoshProject.PoshTemplate
 
 ## NOTES
+
+Note that the template name should be `PoshProjectTemplate.xml` otherwise you will receive an error.
 
 ## RELATED LINKS
 

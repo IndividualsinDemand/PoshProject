@@ -17,7 +17,7 @@ It allows you to create a template, get the template as object, test it and invo
 PS C:\> New-PoshTemplate -ProjectName "Azure-Health-Check" -ProjectType Module -License MIT -DependsOn ("Az.Accounts", "Az.KeyVault")
 
 # Get the template object
-PS C:\> Get-PoshTemplate ".\Azure-Health-Check.xml"
+PS C:\> Get-PoshTemplate ".\PoshProjectTemplate.xml"
 ProjectName  : Azure-Health-Check
 Directories  : Classes,Private,Public,docs,en-US,Tests
 Type         : Module
@@ -26,12 +26,12 @@ License      : MIT
 Metadata     : PoshProject.Metadata
 
 # Test the template
-PS C:\> Test-PoshTemplate ".\Azure-Health-Check.xml"
+PS C:\> Test-PoshTemplate ".\PoshProjectTemplate.xml"
 [+] Error Count: 0
 [+] Valid Template
 
 # Create the project structure
-PS C:\> Invoke-PoshTemplate ".\Azure-Health-Check.xml"
+PS C:\> Invoke-PoshTemplate ".\PoshProjectTemplate.xml"
 [+] Creating Project
 [+] Creating Project Directory
 [+] Creating Module Manifest
@@ -52,14 +52,14 @@ PS C:\> Invoke-PoshTemplate ".\Azure-Health-Check.xml"
 ```
 
 # NOTE
-Test the template before creating your project.
+Test the template before creating your project. Change in the name of template file will return error.
 
 # TROUBLESHOOTING NOTE
 If there is any change in `Guid` in template file you will receive invalid template error.
 To overcome this generate new guid with the cmdlet `New-Guid` and add it in the template.
 
 # SEE ALSO
-Test-PoshTemplate
+[Test-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Test-PoshTemplate.md)
 
 https://github.com/IndividualsinDemand/PoshProject
 

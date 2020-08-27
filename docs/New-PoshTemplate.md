@@ -20,8 +20,13 @@ New-PoshTemplate [-ProjectName] <String> [[-FilePath] <String>] [-ProjectType <S
 
 ## DESCRIPTION
 `New-PoshTemplate` cmdlet creates an xml template file for passed configuration or for a project name. This cmdlet helps you to define 
-your project name, PowerShell manifest file mandatory details and custom directories for your project. It allows three types of projects,
+your project name, PowerShell manifest file mandatory details and custom directories for your project. It allows three types of project types,
 `Script`, `Module` and `Binary`. All the defined files and folders are created based on this.
+
+You can use this for creating any folder structure and you have to specify `Module` to create the folders. By default it will create a set of predefined
+folders and files for all these types.
+
+The template name should be `PoshProjectTemplate.xml` and any change to this name will return error. 
 
 ## EXAMPLES
 
@@ -125,7 +130,7 @@ Accept wildcard characters: False
 ```
 
 ### -License
-{{ Fill License Description }}
+Type of License.
 
 ```yaml
 Type: String
@@ -212,6 +217,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### System.Object
 ## NOTES
+
+Note that the template name should be `PoshProjectTemplate.xml` otherwise you will receive an error.
 
 ## RELATED LINKS
 
