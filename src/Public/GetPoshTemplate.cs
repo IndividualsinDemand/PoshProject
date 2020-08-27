@@ -37,7 +37,7 @@ namespace PoshProject
                     Description = "A simple project scaffolding module for PowerShell",
                     Guid = Guid.NewGuid(),
                     ModuleVersion = "0.1.0",
-                    Path = Directory.GetCurrentDirectory() + "/PoshProjectTemplate.psd1"
+                    Path = Directory.GetCurrentDirectory() + "\\PoshProjectTemplate.psd1"
                 };
 
                 poshTemplate.Metadata = metadata;
@@ -54,16 +54,23 @@ namespace PoshProject
 
                 else
                 {
-                    if (ProjectTemplate.TestTemplate(TemplatePath))
+                    if (!ProjectTemplate.TemplateNameValidator(TemplatePath))
                     {
-                        WriteObject(ProjectTemplate.GetTemplate(TemplatePath));
+                        ProjectTemplate.InvalidFileName();
                     }
 
                     else
                     {
-                        ProjectTemplate.InvalidTemplate();
+                        if (ProjectTemplate.TestTemplate(TemplatePath))
+                        {
+                            WriteObject(ProjectTemplate.GetTemplate(TemplatePath));
+                        }
+
+                        else
+                        {
+                            ProjectTemplate.InvalidTemplate();
+                        }
                     }
-                    
                 }                
             }
         }

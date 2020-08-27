@@ -21,8 +21,19 @@ namespace PoshProject
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "Object")]
+        [Parameter(
+            Mandatory = true,
+            ValueFromPipelineByPropertyName = true,
+            ParameterSetName = "Custom")]
         [ValidateNotNullOrEmpty()]
         public PoshTemplate TemplateObject { get; set; }
+
+        [Parameter(ParameterSetName = "Path")]
+        [Parameter(ParameterSetName = "Object")]
+        public SwitchParameter InstallDependencies { get; set; }
+
+        [Parameter(Mandatory = true, ParameterSetName = "Custom")]
+        public SwitchParameter CustomInstall { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -33,6 +44,11 @@ namespace PoshProject
                     ProjectTemplate.FileNotFound();
                 }
 
+                else if (!ProjectTemplate.TemplateNameValidator(TemplatePath))
+                {
+                    ProjectTemplate.InvalidFileName();
+                }
+
                 else
                 {
                     if (ProjectTemplate.TestTemplate(TemplatePath))
@@ -40,7 +56,17 @@ namespace PoshProject
                         if (ProjectTemplate.ValidateTemplate(TemplatePath) == 0)
                         {
                             PoshTemplate template = ProjectTemplate.GetTemplate(TemplatePath);
-                            ProjectTemplate.CreateProject(template);
+
+                            if (InstallDependencies.IsPresent)
+                            {
+                                ProjectTemplate.CreateProject(template, InstallDependencies.IsPresent);
+                            }
+
+                            else
+                            {
+                                ProjectTemplate.CreateProject(template);
+                            }
+                            
                         }
 
                         else
@@ -58,6 +84,11 @@ namespace PoshProject
                 }
             }
 
+            else if (ParameterSetName == "Custom")
+            {
+                ProjectTemplate.InstallDependencies(TemplateObject);
+            }
+
             else
             {
                 if (TemplateObject.GetType() != typeof(PoshTemplate))
@@ -69,7 +100,15 @@ namespace PoshProject
                 {
                     if (ProjectTemplate.ValidateTemplateObject(TemplateObject) == 0)
                     {
-                        ProjectTemplate.CreateProject(TemplateObject);
+                        if (InstallDependencies.IsPresent)
+                        {
+                            ProjectTemplate.CreateProject(TemplateObject, InstallDependencies.IsPresent);
+                        }
+
+                        else
+                        {
+                            ProjectTemplate.CreateProject(TemplateObject);
+                        }
                     }
 
                     else

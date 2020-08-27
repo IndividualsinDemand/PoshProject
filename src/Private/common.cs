@@ -32,7 +32,7 @@ namespace PoshProject
                 writer.WriteElementString(projectTemplate.License, license);
                 writer.WriteStartElement(projectTemplate.Metadata);
                 writer.WriteElementString(projectTemplate.Author, author);
-                writer.WriteElementString(projectTemplate.Path, path.Replace(".xml", ".psd1"));
+                writer.WriteElementString(projectTemplate.Path, $"{Path.GetDirectoryName(path)}\\{projectName}.psd1");
                 writer.WriteElementString(projectTemplate.RootModule, $"{projectName}.psm1");
                 writer.WriteElementString(projectTemplate.Description, description);
                 writer.WriteElementString(projectTemplate.Guid, id);
@@ -75,6 +75,11 @@ namespace PoshProject
             WriteMessage(GetSign("err"), "Invalid Template");
         }
 
+        public static void InvalidFileName()
+        {
+            WriteMessage(GetSign("err"), "Invalid file name, expected is 'PoshProjectTemplate.xml'");
+        }
+
         public static string GetUserName()
         {
             string _userName = null;
@@ -100,6 +105,18 @@ namespace PoshProject
                 return _userName;
             }
             
+        }
+
+        public static bool TemplateNameValidator(string path)
+        {
+            bool _valid = false;
+
+            if (Path.GetFileName(path) == "PoshProjectTemplate.xml")
+            {
+                _valid = true;
+            }
+
+            return _valid;
         }
 
         public static PoshTemplate GetTemplate(string path)
@@ -152,45 +169,99 @@ namespace PoshProject
             ps.Invoke();
         }
 
+        public static bool FindModule(string moduleName)
+        {
+            bool _present = false;
+
+            try
+            {
+                var result = PowerShell.Create().AddCommand("Find-Module")
+                                                .AddParameter("Name", moduleName)
+                                                .AddParameter("Repository", "PSGallery")
+                                                .Invoke();
+
+                _present = true ? result.Count != 0 : false;
+
+                return _present;
+            }
+
+            catch
+            {
+                return _present;
+            }
+        }
+
+        public static bool IsAlreadyInstalled(string moduleName)
+        {
+            bool _isAlreadyPresent = false;
+
+            string[] modulePaths = Environment.GetEnvironmentVariable("PSModulePath").Split(';');
+
+            foreach(string path in modulePaths)
+            {
+                string[] directories = Directory.GetDirectories(path);
+
+                foreach(string dir in directories)
+                {
+                    if (Path.GetFileName(dir) == moduleName)
+                    {
+                        _isAlreadyPresent = true;
+                    }
+                }
+            }
+
+            return _isAlreadyPresent;
+        }
+
         public static void InstallDependencies(PoshTemplate template)
         {
             // Installing dependencies
             if (!string.IsNullOrEmpty(template.Dependencies))
             {
                 string[] dependencies = template.Dependencies.Split(',');
-                string _result = null;
 
                 foreach (string module in dependencies)
                 {
-
-                    WriteMessage(GetSign("info"), $"Installing {module}");
-
-                    try
+                    if (!string.IsNullOrWhiteSpace(module))
                     {
-                        PowerShell ps = PowerShell.Create().AddCommand("Install-Module")
-                                                           .AddParameter("Name", module)
-                                                           .AddParameter("Scope", "CurrentUser")
-                                                           .AddParameter("Force", true)
-                                                           .AddParameter("AllowClobber", true);
+                        WriteMessage(GetSign("info"), $"Installing {module}");
 
-                        ps.Invoke();
+                        if (IsAlreadyInstalled(module))
+                        {
 
-                        _result += 1;
-                    }
+                            WriteMessage(GetSign("info"), $"Already installed: {module}");
+                        }
 
-                    catch
-                    {
-                        _result = null;
-                    }
+                        else if (!FindModule(module))
+                        {
+                            WriteMessage(GetSign("err"), $"Couldn't find the module {module} in PSGallery");
+                        }
 
-                    if (_result != null)
-                    {
-                        WriteMessage(GetSign("info"), $"Successfully installed: {module}");
+                        else
+                        {
+                            try
+                            {
+                                PowerShell ps = PowerShell.Create().AddCommand("Install-Module")
+                                                                       .AddParameter("Name", module)
+                                                                       .AddParameter("Scope", "CurrentUser")
+                                                                       .AddParameter("Force", true)
+                                                                       .AddParameter("AllowClobber", true);
+
+                                ps.Invoke();
+
+                                WriteMessage(GetSign("info"), $"Successfully installed: {module}");
+                            }
+
+                            catch
+                            {
+                                WriteMessage(GetSign("err"), $"Installation failed: {module}");
+                            }
+                        }
                     }
 
                     else
                     {
-                        WriteMessage(GetSign("err"), $"Installation failed: {module}");
+                        WriteMessage(GetSign("err"), $"Invalid module name");
                     }
                 }
             }
@@ -224,82 +295,94 @@ namespace PoshProject
             Console.ForegroundColor = currentForeground;
         }
 
-        public static void CreateProject(PoshTemplate template)
+        public static void CreateProject(PoshTemplate template, bool installDependencies = false)
         {
-            string sign = GetSign("info");
-            TemplateContents contents = new TemplateContents();
-
-            // Creating Project
-            WriteMessage(sign, "Creating Project");
             var projectPath = template.Metadata.Path.Replace(".psd1", "");
 
-            // Creating Project Directory
-            WriteMessage(sign, "Creating Project Directory");
-            Directory.CreateDirectory(projectPath);
-
-            // Creating manifest
-            WriteMessage(sign, "Creating Module Manifest");
-            CreateManifest(template, projectPath);
-
-            // Creating module file
-            WriteMessage(sign, "Creating Root Module");
-            File.WriteAllText($"{projectPath}\\{template.Metadata.RootModule}", contents.FunctionContents);
-
-            // Adding License
-            if (template.License != null)
+            if (Directory.Exists(projectPath))
             {
-                WriteMessage(sign, $"Adding License");
-
-                if (template.License == "MIT")
-                {
-                    File.WriteAllText($"{projectPath}\\License", contents.MIT.Replace("@AuthorName", template.Metadata.Author));
-                }
-
-                else if (template.License == "Apache")
-                {
-                    File.WriteAllText($"{projectPath}\\License", contents.Apache.Replace("@AuthorName", template.Metadata.Author));
-                }
-            }
-
-            if (template.Type == "Script")
-            {
-                // Creating Directories (in this case it will be a .tests file)
-                WriteMessage(sign, "Creating Pester Tests File");
-                File.WriteAllText($"{projectPath}\\{template.Directories}", contents.TestContents);                
+                WriteMessage(GetSign("err"), $"Project '{projectPath}' already exists");
             }
 
             else
             {
+                string sign = GetSign("info");
+                TemplateContents contents = new TemplateContents();
 
-                // Creating Directories
-                WriteMessage(sign, "Creating Project Directories");
-                string[] directories = template.Directories.Split(',');
+                // Creating Project
+                WriteMessage(sign, "Creating Project");
 
-                foreach (string dir in directories)
+                // Creating Project Directory
+                WriteMessage(sign, "Creating Project Directory");
+                Directory.CreateDirectory(projectPath);
+
+                // Creating manifest
+                WriteMessage(sign, "Creating Module Manifest");
+                CreateManifest(template, projectPath);
+
+                // Creating module file
+                WriteMessage(sign, "Creating Root Module");
+                File.WriteAllText($"{projectPath}\\{template.Metadata.RootModule}", contents.FunctionContents);
+
+                // Adding License
+                if (!string.IsNullOrEmpty(template.License))
                 {
-                    WriteMessage(sign, $"Creating {dir}");
-                    Directory.CreateDirectory($"{projectPath}\\{dir}");
+                    WriteMessage(sign, $"Adding License");
 
-                    if(dir == "Classes")
+                    if (template.License == "MIT")
                     {
-                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Class.ps1", contents.ClassContents);
+                        File.WriteAllText($"{projectPath}\\License", contents.MIT.Replace("@AuthorName", template.Metadata.Author));
                     }
 
-                    else if (dir == "Public")
+                    else if (template.License == "Apache")
                     {
-                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.ps1", contents.FunctionContents);
-                    }
-
-                    else if (dir == "Tests" || dir == "Test" || dir == "tests" || dir == "test")
-                    {
-                        File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Tests.ps1", contents.TestContents);
+                        File.WriteAllText($"{projectPath}\\License", contents.Apache.Replace("@AuthorName", template.Metadata.Author));
                     }
                 }
-            }            
 
-            // Installing Dependencies
-            WriteMessage(sign, "Installing Dependencies");
-            InstallDependencies(template);
+                if (template.Type == "Script")
+                {
+                    // Creating Directories (in this case it will be a .tests file)
+                    WriteMessage(sign, "Creating Pester Tests File");
+                    File.WriteAllText($"{projectPath}\\{template.Directories}", contents.TestContents);
+                }
+
+                else
+                {
+
+                    // Creating Directories
+                    WriteMessage(sign, "Creating Project Directories");
+                    string[] directories = template.Directories.Split(',');
+
+                    foreach (string dir in directories)
+                    {
+                        WriteMessage(sign, $"Creating {dir}");
+                        Directory.CreateDirectory($"{projectPath}\\{dir}");
+
+                        if (dir == "Classes")
+                        {
+                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Class.ps1", contents.ClassContents);
+                        }
+
+                        else if (dir == "Public")
+                        {
+                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.ps1", contents.FunctionContents);
+                        }
+
+                        else if (dir == "Tests" || dir == "Test" || dir == "tests" || dir == "test")
+                        {
+                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Tests.ps1", contents.TestContents);
+                        }
+                    }
+                }
+
+                if (installDependencies)
+                {
+                    // Installing Dependencies
+                    WriteMessage(sign, "Installing Dependencies");
+                    InstallDependencies(template);
+                }
+            }
         }
 
         public static string GetSign(string message)

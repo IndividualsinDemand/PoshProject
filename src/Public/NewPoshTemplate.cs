@@ -42,109 +42,90 @@ namespace PoshProject
 
         [Parameter(Mandatory = false)]
         [ValidateNotNullOrEmpty()]
-        public Guid Guid { get; set; }
+        public Guid Guid { get; set; } = Guid.NewGuid();
 
         [Parameter(Mandatory = false)]
         [ValidateNotNullOrEmpty()]
-        public string Version { get; set; }
+        public string Version { get; set; } = "0.1.0";
 
         [Parameter(Mandatory = false)]
-        [AllowNull()]
-        public string[] DependsOn { get; set; }
+        [ValidateNotNullOrEmpty()]
+        public string[] DependsOn { get; set; } = new string[] { null };
 
         [Parameter(Mandatory = false)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("MIT", "Apache")]
-        public string License { get; set; }
+        public string License { get; set; } = null;
 
         protected override void ProcessRecord()
         {
-            if (MyInvocation.BoundParameters.ContainsKey("FilePath"))
+            if (MyInvocation.BoundParameters.ContainsKey("FilePath") & (!ProjectTemplate.TemplateNameValidator(FilePath)))
             {
-                if (!(FilePath.Contains(".xml")))
-                {
-                    FilePath += $"\\{ProjectName}.xml";
-                }
+                ProjectTemplate.InvalidFileName();
             }
 
-            if (!(MyInvocation.BoundParameters.ContainsKey("FilePath")))
+            else
             {
-                FilePath = Directory.GetCurrentDirectory() + $"\\{ProjectName}.xml";
-            }
 
-            if (!(MyInvocation.BoundParameters.ContainsKey("Author")))
-            {
-                if (ProjectTemplate.GetUserName() != null)
+                if (!(MyInvocation.BoundParameters.ContainsKey("FilePath")))
                 {
-                    Author = ProjectTemplate.GetUserName();
+                    FilePath = Directory.GetCurrentDirectory() + $"\\PoshProjectTemplate.xml";
                 }
 
-                else
+                if (!(MyInvocation.BoundParameters.ContainsKey("Author")))
                 {
-                    Author = Environment.UserName;
-                }
-                
-            }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("Directories")))
-            {
-                if (ProjectType == "Script")
-                {
-                    Directories = new string[] { $"{ProjectName}.tests.ps1" };
-                }
-
-                else if (ProjectType == "Module")
-                {
-                    Directories = new string[]
+                    if (ProjectTemplate.GetUserName() != null)
                     {
-                        "Classes", "Private", "Public", "docs", "en-US", "Tests"
+                        Author = ProjectTemplate.GetUserName();
+                    }
+
+                    else
+                    {
+                        Author = Environment.UserName;
+                    }
+
+                }
+
+                if (!(MyInvocation.BoundParameters.ContainsKey("Directories")))
+                {
+                    if (ProjectType == "Script")
+                    {
+                        Directories = new string[] { $"{ProjectName}.tests.ps1" };
+                    }
+
+                    else if (ProjectType == "Module")
+                    {
+                        Directories = new string[]
+                        {
+                            "Classes", "Private", "Public", "docs", "en-US", "Tests"
+                        };
+                    }
+
+                    else
+                    {
+                        Directories = new string[]
+                        {
+                            "Output", ProjectName, "src", "docs", "en-US", "Tests"
+                        };
+                    }
+
+                }
+
+                if (!(MyInvocation.BoundParameters.ContainsKey("Description")))
+                {
+                    Description = $"Module for {ProjectName}";
+                }
+
+                if (!(MyInvocation.BoundParameters.ContainsKey("Tags")))
+                {
+                    Tags = new string[]
+                    {
+                        "PowerShell", $"{ProjectName}Module", ProjectName
                     };
                 }
 
-                else
-                {
-                    Directories = new string[]
-                    {
-                        "Output", ProjectName, "src", "docs", "en-US", "Tests"
-                    };
-                }
-
+                ProjectTemplate.NewTemplate(ProjectName, FilePath, ProjectType, Author, Directories, Description, Guid.ToString(), Tags, Version, DependsOn, License);
             }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("Description")))
-            {
-                Description = $"Module for {ProjectName}";
-            }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("Tags")))
-            {
-                Tags = new string[]
-                {
-                    "PowerShell", $"{ProjectName}Module", ProjectName
-                };
-            }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("Guid")))
-            {
-                Guid = Guid.NewGuid();
-            }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("Version")))
-            {
-                Version = "0.1.0";
-            }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("DependsOn")))
-            {
-                DependsOn = new string[] { null };
-            }
-
-            if (!(MyInvocation.BoundParameters.ContainsKey("License")))
-            {
-                License = null;
-            }
-
-            ProjectTemplate.NewTemplate(ProjectName, FilePath, ProjectType, Author, Directories, Description, Guid.ToString(), Tags, Version, DependsOn, License);
         }
     }
 }
