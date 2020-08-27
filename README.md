@@ -37,7 +37,7 @@ Cmdlet          Test-PoshTemplate                                  0.1.0      Po
 PS C:\> New-PoshTemplate -ProjectName "Azure-Health-Check" -ProjectType Module -License MIT -DependsOn ("Az.Accounts", "Az.KeyVault")
 
 # Get the template object
-PS C:\> Get-PoshTemplate ".\Azure-Health-Check.xml"
+PS C:\> Get-PoshTemplate ".\PoshProjectTemplate.xml"
 ProjectName  : Azure-Health-Check
 Directories  : Classes,Private,Public,docs,en-US,Tests
 Type         : Module
@@ -46,12 +46,12 @@ License      : MIT
 Metadata     : PoshProject.Metadata
 
 # Test the template
-PS C:\> Test-PoshTemplate ".\Azure-Health-Check.xml"
+PS C:\> Test-PoshTemplate ".\PoshProjectTemplate.xml"
 [+] Error Count: 0
 [+] Valid Template
 
 # Create the project structure
-PS C:\> Invoke-PoshTemplate ".\Azure-Health-Check.xml"
+PS C:\> Invoke-PoshTemplate ".\PoshProjectTemplate.xml"
 [+] Creating Project
 [+] Creating Project Directory
 [+] Creating Module Manifest
@@ -69,8 +69,16 @@ PS C:\> Invoke-PoshTemplate ".\Azure-Health-Check.xml"
 [+] Successfully installed: Az.Accounts
 [+] Installing Az.KeyVault
 [+] Successfully installed: Az.KeyVault
+
+# Custom install the dependencies once you have started working on your project
+PS C:\> $template.Dependencies = @("Az.Accounts", "Az.KeyVault") -join ","
+PS C:\> Invoke-PoshTemplate -TemplateObject $template -CustomInstall
+[+] Installing Az.Accounts
+[+] Successfully installed: Az.Accounts
+[+] Installing Az.KeyVault
+[+] Successfully installed: Az.KeyVault
 ```
 
 ### Notes
 
-This is a simple module which allows you to create the project structure and yet useful. Any updated or suggestions are welcome.
+The name of the template should be `PoshProjectTemplate.xml` otherwise you will receive an error.
