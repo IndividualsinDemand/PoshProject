@@ -74,7 +74,7 @@ namespace PoshProject
 
                 if (!(MyInvocation.BoundParameters.ContainsKey("Author")))
                 {
-                    if (ProjectTemplate.GetUserName() != null)
+                    if (!string.IsNullOrEmpty(ProjectTemplate.GetUserName()))
                     {
                         Author = ProjectTemplate.GetUserName();
                     }
