@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Configuration>
+	<ProjectName>PersonalVault</ProjectName>
+	<Directories>Output,PersonalVault,src,docs,en-US,Tests</Directories>
+	<Type>Binary</Type>
+	<Dependencies>VSTeam</Dependencies>
+	<License />
+	<Metadata>
+		<Author>IndividualsinDemand</Author>
+		<Path>C:\Projects\projectTester\PersonalVault.psd1</Path>
+		<RootModule>PersonalVault.psm1</RootModule>
+		<Description>Module for PersonalVault</Description>
+		<Guid>67f3d9fa-95c9-42fa-b0e3-bf6c4f86a898</Guid>
+		<Tags>PowerShell,PersonalVaultModule,PersonalVault</Tags>
+		<ModuleVersion>0.1.0</ModuleVersion>
+	</Metadata>
+</Configuration>
