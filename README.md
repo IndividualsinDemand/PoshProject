@@ -82,3 +82,7 @@ PS C:\> Invoke-PoshTemplate -TemplateObject $template -CustomInstall
 ### Notes
 
 The name of the template should be `PoshProjectTemplate.xml` otherwise you will receive an error.
+
+### Comments
+
+Contributions are welcome if this simple module interests you.
