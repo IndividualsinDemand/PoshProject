@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<Configuration>
+<Configuration xmlns="http://www.w3.org/2001/XMLSchema-instance">
 	<ProjectName>PersonalVault</ProjectName>
 	<Directories>Output,PersonalVault,src,docs,en-US,Tests</Directories>
 	<Type>Binary</Type>
