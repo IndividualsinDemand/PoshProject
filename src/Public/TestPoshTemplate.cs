@@ -54,6 +54,15 @@ namespace PoshProject
                             _errorCount += 1;
                         }
 
+                        if (!string.IsNullOrEmpty(template.Type))
+                        {
+                            if (template.Type != "Script" || template.Type != "Module" || template.Type != "Binary")
+                            {
+                                ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Type}> invalid project type");
+                                _errorCount += 1;
+                            }                            
+                        }
+
                         if (string.IsNullOrEmpty(template.Metadata.Author))
                         {
                             ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Author}> is empty");

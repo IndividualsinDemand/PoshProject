@@ -94,7 +94,10 @@ namespace PoshProject
                 
                 foreach (string content in contents)
                 {
-                    _userName = regex.Match(content).Value;
+                    if (regex.Match(content).Success)
+                    {
+                        _userName = regex.Match(content).Value;
+                    }
                 }
 
                 return _userName.Split('=')[1].Trim();
@@ -430,6 +433,14 @@ namespace PoshProject
                     projectTemplate._errorCount += 1;
                 }
 
+                if (!string.IsNullOrEmpty(template.Type))
+                {
+                    if (template.Type != "Script" || template.Type != "Module" || template.Type != "Binary")
+                    {
+                        projectTemplate._errorCount += 1;
+                    }
+                }
+
                 if (string.IsNullOrEmpty(template.Metadata.Author))
                 {
                     projectTemplate._errorCount += 1;
@@ -509,6 +520,14 @@ namespace PoshProject
             if (string.IsNullOrEmpty(templateObject.Type))
             {
                 projectTemplate._errorCount += 1;
+            }
+
+            if (!string.IsNullOrEmpty(templateObject.Type))
+            {
+                if (templateObject.Type != "Script" || templateObject.Type != "Module" || templateObject.Type != "Binary")
+                {
+                    projectTemplate._errorCount += 1;
+                }
             }
 
             if (string.IsNullOrEmpty(templateObject.Metadata.Author))
