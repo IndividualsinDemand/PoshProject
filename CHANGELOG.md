@@ -11,3 +11,8 @@ Initial module release
 - Project template to use a consistent name so that a single template can be re-used.
 - Now `Invoke-poshTemplate` throws error if the project already exists in the path.
 - Added `CustomInstall` parameter to `Invoke-PoshTemplate` where you can pass the template object and install the dependencies.
+
+# 0.2.2
+
+- Bug fix for Author name in `New-PoshTemplate`
+- Added functionality to validate the project type in the template
