@@ -56,7 +56,7 @@ namespace PoshProject
 
                         if (!string.IsNullOrEmpty(template.Type))
                         {
-                            if (template.Type != "Script" || template.Type != "Module" || template.Type != "Binary")
+                            if (template.Type != "Script" & template.Type != "Module" & template.Type != "Binary")
                             {
                                 ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Type}> invalid project type");
                                 _errorCount += 1;

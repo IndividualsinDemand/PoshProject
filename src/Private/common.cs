@@ -435,7 +435,7 @@ namespace PoshProject
 
                 if (!string.IsNullOrEmpty(template.Type))
                 {
-                    if (template.Type != "Script" || template.Type != "Module" || template.Type != "Binary")
+                    if (template.Type != "Script" & template.Type != "Module" & template.Type != "Binary")
                     {
                         projectTemplate._errorCount += 1;
                     }
@@ -524,7 +524,7 @@ namespace PoshProject
 
             if (!string.IsNullOrEmpty(templateObject.Type))
             {
-                if (templateObject.Type != "Script" || templateObject.Type != "Module" || templateObject.Type != "Binary")
+                if (templateObject.Type != "Script" & templateObject.Type != "Module" & templateObject.Type != "Binary")
                 {
                     projectTemplate._errorCount += 1;
                 }
