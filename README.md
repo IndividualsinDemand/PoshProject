@@ -85,4 +85,4 @@ The name of the template should be `PoshProjectTemplate.xml` otherwise you will 
 
 ### Comments
 
-Contributions are welcome if this simple module interests you.
+Contributions are welcome.
