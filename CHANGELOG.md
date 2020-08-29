@@ -14,5 +14,6 @@ Initial module release
 
 # 0.2.2
 
-- Bug fix for Author name in `New-PoshTemplate`
+- Bug fix for `Author` name in `New-PoshTemplate`. It wouldn't display `Author` name in the template if the .gitconfig file has more entries.
+This is fixed in this version.
 - Added functionality to validate the project type in the template
