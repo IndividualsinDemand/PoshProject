@@ -65,7 +65,7 @@
     </command:returnValues>
     <maml:alertSet>
       <maml:alert>
-        <maml:para></maml:para>
+        <maml:para>Note that the template name should be `PoshProjectTemplate.xml` otherwise you will receive an error.</maml:para>
       </maml:alert>
     </maml:alertSet>
     <command:examples>
@@ -666,7 +666,7 @@ PS C:\&gt; Invoke-PoshTemplate -TemplateObject $template -CustomInstall
     </command:examples>
     <command:relatedLinks>
       <maml:navigationLink>
-        <maml:linkText>Invoke-PoshTemplate</maml:linkText>
+        <maml:linkText>New-PoshTemplate</maml:linkText>
         <maml:uri>https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Invoke-PoshTemplate.md</maml:uri>
       </maml:navigationLink>
     </command:relatedLinks>
@@ -688,7 +688,7 @@ PS C:\&gt; Invoke-PoshTemplate -TemplateObject $template -CustomInstall
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Test-PoshTemplate</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
           <maml:name>TemplatePath</maml:name>
           <maml:Description>
             <maml:para>Provide the path to template file.</maml:para>
@@ -703,7 +703,7 @@ PS C:\&gt; Invoke-PoshTemplate -TemplateObject $template -CustomInstall
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
         <maml:name>TemplatePath</maml:name>
         <maml:Description>
           <maml:para>Provide the path to template file.</maml:para>
@@ -769,8 +769,8 @@ PS C:\&gt; Invoke-PoshTemplate -TemplateObject $template -CustomInstall
     </command:examples>
     <command:relatedLinks>
       <maml:navigationLink>
-        <maml:linkText>Get-PoshTemplate</maml:linkText>
-        <maml:uri>https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Get-PoshTemplate.md</maml:uri>
+        <maml:linkText>Test-PoshTemplate</maml:linkText>
+        <maml:uri>https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Test-PoshTemplate.md</maml:uri>
       </maml:navigationLink>
     </command:relatedLinks>
   </command:command>

@@ -66,7 +66,7 @@ https://github.com/IndividualsinDemand/PoshProject
 # KEYWORDS
 List of cmdlets
 
-- Get-PoshTemplate
-- Test-PoshTemplate
-- New-PoshTemplate
-- Invoke-PoshTemplate
+- [Get-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Get-PoshTemplate.md)
+- [Test-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Test-PoshTemplate.md)
+- [New-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/New-PoshTemplate.md)
+- [Invoke-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Invoke-PoshTemplate.md)

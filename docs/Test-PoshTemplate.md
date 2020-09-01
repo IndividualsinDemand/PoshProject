@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Test-PoshTemplate [-TemplatePath] <String> [<CommonParameters>]
+Test-PoshTemplate [[-TemplatePath] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -61,7 +61,7 @@ Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 0
 Default value: None
 Accept pipeline input: True (ByPropertyName, ByValue)
@@ -85,4 +85,4 @@ Note that the template name should be `PoshProjectTemplate.xml` otherwise you wi
 
 ## RELATED LINKS
 
-[Get-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Get-PoshTemplate.md)
+[Test-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Test-PoshTemplate.md)

@@ -222,4 +222,4 @@ Note that the template name should be `PoshProjectTemplate.xml` otherwise you wi
 
 ## RELATED LINKS
 
-[Invoke-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Invoke-PoshTemplate.md)
+[New-PoshTemplate](https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Invoke-PoshTemplate.md)

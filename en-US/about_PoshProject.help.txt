@@ -62,13 +62,17 @@ TROUBLESHOOTING NOTE
     `New-Guid` and add it in the template.
 
 SEE ALSO
-    https://github.com/IndividualsinDemand/PoshProject/blob/master/docs/Test-PoshTemplate.md
+    Test-PoshTemplate
     https://github.com/IndividualsinDemand/PoshProject
 
 KEYWORDS
     List of cmdlets
-    - Get-PoshTemplate
-    - Test-PoshTemplate
-    - New-PoshTemplate
-    - Invoke-PoshTemplate
+-
+    Get-PoshTemplate
+    -
+    Test-PoshTemplate
+    -
+    New-PoshTemplate
+    -
+    Invoke-PoshTemplate
 
