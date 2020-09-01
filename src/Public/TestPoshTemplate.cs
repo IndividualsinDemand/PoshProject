@@ -8,12 +8,12 @@ namespace PoshProject
     public class TestPoshTemplate : PSCmdlet
     {
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public string TemplatePath { get; set; }
+        public string TemplatePath { get; set; } = Directory.GetCurrentDirectory() + "\\PoshProjectTemplate.xml";
 
         private int _errorCount { get; set; } = 0;
 
@@ -58,7 +58,7 @@ namespace PoshProject
                         {
                             if (template.Type != "Script" & template.Type != "Module" & template.Type != "Binary")
                             {
-                                ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Type}> invalid project type");
+                                ProjectTemplate.WriteMessage(ProjectTemplate.GetSign("err"), $"<{xmlTemplate.Type}> invalid project type; Accepted values are 'Script', 'Module' and 'Binary'");
                                 _errorCount += 1;
                             }                            
                         }

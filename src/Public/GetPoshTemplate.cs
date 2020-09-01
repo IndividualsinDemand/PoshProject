@@ -14,64 +14,34 @@ namespace PoshProject
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public string TemplatePath { get; set; }
+        public string TemplatePath { get; set; } = Directory.GetCurrentDirectory() + "\\PoshProjectTemplate.xml";
 
         protected override void ProcessRecord()
         {
-            if (!(MyInvocation.BoundParameters.ContainsKey("TemplatePath")))
+            if (!(File.Exists(TemplatePath)))
             {
-                PoshTemplate poshTemplate = new PoshTemplate
-                {
-                    ProjectName = "PoshProjectTemplate",
-                    Directories = "PoshProjectTemplate.tests.ps1",
-                    Type = "Script",
-                    Dependencies = "",
-                    License = "MIT"
-                };
-
-                Metadata metadata = new Metadata()
-                {
-                    Author = Environment.UserName,
-                    RootModule = "PoshProjectTemplate.psm1",
-                    Tags = string.Join(",", "PoshProject", "PoshTemplate", "PoshProjectTemplate"),
-                    Description = "A simple project scaffolding module for PowerShell",
-                    Guid = Guid.NewGuid(),
-                    ModuleVersion = "0.1.0",
-                    Path = Directory.GetCurrentDirectory() + "\\PoshProjectTemplate.psd1"
-                };
-
-                poshTemplate.Metadata = metadata;
-
-                WriteObject(poshTemplate);
+                ProjectTemplate.FileNotFound();
             }
 
             else
             {
-                if (!(File.Exists(TemplatePath)))
+                if (!ProjectTemplate.TemplateNameValidator(TemplatePath))
                 {
-                    ProjectTemplate.FileNotFound();
+                    ProjectTemplate.InvalidFileName();
                 }
 
                 else
                 {
-                    if (!ProjectTemplate.TemplateNameValidator(TemplatePath))
+                    if (ProjectTemplate.TestTemplate(TemplatePath))
                     {
-                        ProjectTemplate.InvalidFileName();
+                        WriteObject(ProjectTemplate.GetTemplate(TemplatePath));
                     }
 
                     else
                     {
-                        if (ProjectTemplate.TestTemplate(TemplatePath))
-                        {
-                            WriteObject(ProjectTemplate.GetTemplate(TemplatePath));
-                        }
-
-                        else
-                        {
-                            ProjectTemplate.InvalidTemplate();
-                        }
+                        ProjectTemplate.InvalidTemplate();
                     }
-                }                
+                }
             }
         }
     }
