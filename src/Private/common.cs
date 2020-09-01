@@ -315,7 +315,7 @@ namespace PoshProject
         {
             var projectPath = template.Metadata.Path.Replace(".psd1", "");
             TemplateContents contents = new TemplateContents();
-            string _path = contents.RootPath;
+            string _path = contents.AssemblyRootPath;
             string _currentPath = $"{_path}{contents.ContentsPath}";
             string modulePath = $"{_currentPath}{contents.ModulePath}";
             string classPath = $"{_currentPath}{contents.ClassPath}";
