@@ -18,3 +18,5 @@ Initial module release
 This is fixed in this version.
 - Added functionality to validate the project type in the template
 - Update for `Get-PoshTemplate` and `Test-PoshTemplate`, template path is not mandatory parameters as it seeks for the template in current location.
+- Moved hardcoded template contents to individual files.
+- Added logic to create README file.
