@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Management.Automation;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
@@ -298,9 +299,31 @@ namespace PoshProject
             Console.ForegroundColor = currentForeground;
         }
 
+        public static string ReadContents(string path, string replaceString = null, string replaceValue = null)
+        {
+            var contents = File.ReadAllText(path);
+
+            if (!string.IsNullOrWhiteSpace(replaceString) && !string.IsNullOrWhiteSpace(replaceValue))
+            {
+                return contents.Replace(replaceString, replaceValue);
+            }
+
+            return contents;
+        }
+
         public static void CreateProject(PoshTemplate template, bool installDependencies = false)
         {
             var projectPath = template.Metadata.Path.Replace(".psd1", "");
+            TemplateContents contents = new TemplateContents();
+            string _path = contents.RootPath;
+            string _currentPath = $"{_path}{contents.ContentsPath}";
+            string modulePath = $"{_currentPath}{contents.ModulePath}";
+            string classPath = $"{_currentPath}{contents.ClassPath}";
+            string testsPath = $"{_currentPath}{contents.TestsPath}";
+            string mitPath = $"{_currentPath}{contents.MITPath}";
+            string apachePath = $"{_currentPath}{contents.ApachePath}";
+            string aboutMD = $"{_currentPath}{contents.AboutMDPath}";
+            string aboutText = $"{_currentPath}{contents.AboutTextPath}";
 
             if (Directory.Exists(projectPath))
             {
@@ -310,7 +333,6 @@ namespace PoshProject
             else
             {
                 string sign = GetSign("info");
-                TemplateContents contents = new TemplateContents();
 
                 // Creating Project
                 WriteMessage(sign, "Creating Project");
@@ -325,7 +347,11 @@ namespace PoshProject
 
                 // Creating module file
                 WriteMessage(sign, "Creating Root Module");
-                File.WriteAllText($"{projectPath}\\{template.Metadata.RootModule}", contents.FunctionContents);
+                File.WriteAllText($"{projectPath}\\{template.Metadata.RootModule}", ReadContents(modulePath));
+
+                // Creating README
+                WriteMessage(sign, "Creating README.md");
+                File.WriteAllText($"{projectPath}\\README.md", $"# {template.ProjectName}");
 
                 // Adding License
                 if (!string.IsNullOrEmpty(template.License))
@@ -334,12 +360,12 @@ namespace PoshProject
 
                     if (template.License == "MIT")
                     {
-                        File.WriteAllText($"{projectPath}\\License", contents.MIT.Replace("@AuthorName", template.Metadata.Author));
+                        File.WriteAllText($"{projectPath}\\LICENSE", ReadContents(mitPath, "@AuthorName", template.Metadata.Author));
                     }
 
                     else if (template.License == "Apache")
                     {
-                        File.WriteAllText($"{projectPath}\\License", contents.Apache.Replace("@AuthorName", template.Metadata.Author));
+                        File.WriteAllText($"{projectPath}\\LICENSE", ReadContents(apachePath, "@AuthorName", template.Metadata.Author));
                     }
                 }
 
@@ -347,7 +373,7 @@ namespace PoshProject
                 {
                     // Creating Directories (in this case it will be a .tests file)
                     WriteMessage(sign, "Creating Pester Tests File");
-                    File.WriteAllText($"{projectPath}\\{template.Directories}", contents.TestContents);
+                    File.WriteAllText($"{projectPath}\\{template.Directories}", ReadContents(testsPath));
                 }
 
                 else
@@ -362,19 +388,29 @@ namespace PoshProject
                         WriteMessage(sign, $"Creating {dir}");
                         Directory.CreateDirectory($"{projectPath}\\{dir}");
 
-                        if (dir == "Classes")
+                        if (dir == "Classes" || dir == "Class")
                         {
-                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Class.ps1", contents.ClassContents);
+                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Class.ps1", ReadContents(classPath));
                         }
 
                         else if (dir == "Public")
                         {
-                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.ps1", contents.FunctionContents);
+                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.ps1", ReadContents(modulePath));
                         }
 
                         else if (dir == "Tests" || dir == "Test" || dir == "tests" || dir == "test")
                         {
-                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Tests.ps1", contents.TestContents);
+                            File.WriteAllText($"{projectPath}\\{dir}\\{template.ProjectName}.Tests.ps1", ReadContents(testsPath));
+                        }
+
+                        else if (dir == "docs" || dir == "doc" || dir == "documents")
+                        {
+                            File.WriteAllText($"{projectPath}\\{dir}\\about_Module.help.md", ReadContents(aboutMD, "@ProjectName", template.ProjectName));
+                        }
+
+                        else if (dir == "en-US")
+                        {
+                            File.WriteAllText($"{projectPath}\\{dir}\\about_Module.help.txt", ReadContents(aboutText, "@ProjectName", template.ProjectName));
                         }
                     }
                 }
