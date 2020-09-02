@@ -21,10 +21,7 @@ namespace PoshProject
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "Object")]
-        [Parameter(
-            Mandatory = true,
-            ValueFromPipelineByPropertyName = true,
-            ParameterSetName = "Custom")]
+        [Parameter(Mandatory = true, ParameterSetName = "Custom")]
         [ValidateNotNullOrEmpty()]
         public PoshTemplate TemplateObject { get; set; }
 

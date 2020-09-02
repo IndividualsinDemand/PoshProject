@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Management.Automation;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
@@ -31,6 +30,8 @@ namespace PoshProject
                 writer.WriteElementString(projectTemplate.Type, type);
                 writer.WriteElementString(projectTemplate.Dependencies, string.Join(",", dependsOn));
                 writer.WriteElementString(projectTemplate.License, license);
+
+                // This creates the metadata section which is used for creating module manifest
                 writer.WriteStartElement(projectTemplate.Metadata);
                 writer.WriteElementString(projectTemplate.Author, author);
                 writer.WriteElementString(projectTemplate.Path, $"{Path.GetDirectoryName(path)}\\{projectName}.psd1");
@@ -314,9 +315,11 @@ namespace PoshProject
         public static void CreateProject(PoshTemplate template, bool installDependencies = false)
         {
             var projectPath = template.Metadata.Path.Replace(".psd1", "");
+
+            // Template contents class contains the path to sample files that will be copied to the project folder
             TemplateContents contents = new TemplateContents();
             string _path = contents.AssemblyRootPath;
-            string _currentPath = $"{_path}{contents.ContentsPath}";
+            string _currentPath = $"{_path}{contents.CurrentContentsPath}";
             string modulePath = $"{_currentPath}{contents.ModulePath}";
             string classPath = $"{_currentPath}{contents.ClassPath}";
             string testsPath = $"{_currentPath}{contents.TestsPath}";
@@ -444,6 +447,7 @@ namespace PoshProject
             return regex.IsMatch(Guid.ToString());
         }
 
+        // This function/method is necessary for validating the template before invoking it.
         public static int ValidateTemplate(string path)
         {
             ProjectTemplate projectTemplate = new ProjectTemplate();
@@ -536,6 +540,7 @@ namespace PoshProject
             return projectTemplate._errorCount;
         }
 
+        // function for validating the template object
         public static int ValidateTemplateObject(PoshTemplate templateObject)
         {
             ProjectTemplate projectTemplate = new ProjectTemplate();
