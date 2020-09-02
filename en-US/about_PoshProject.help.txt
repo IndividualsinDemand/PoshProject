@@ -66,13 +66,9 @@ SEE ALSO
     https://github.com/IndividualsinDemand/PoshProject
 
 KEYWORDS
-    List of cmdlets
--
-    Get-PoshTemplate
-    -
-    Test-PoshTemplate
-    -
-    New-PoshTemplate
-    -
-    Invoke-PoshTemplate
+List of cmdlets
+    - Get-PoshTemplate
+    - Test-PoshTemplate
+    - New-PoshTemplate
+    - Invoke-PoshTemplate
 

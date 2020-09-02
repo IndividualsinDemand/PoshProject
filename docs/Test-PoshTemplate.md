@@ -29,7 +29,12 @@ Template name should be `PoshProjectTemplate.xml` otherwise you will receive an 
 
 ### Example 1
 ```powershell
-PS C:\> Test-PoshTemplate -TemplatePath .\PoshProjectTemplate.xml
+# Assuming that the template is in current path.
+PS C:\> Test-PoshTemplate
+[+] Error Count: 0
+[+] Valid Template
+
+PS C:\> Test-PoshTemplate -TemplatePath "C:\TEMP\PoshProjectTemplate.xml"
 [+] Error Count: 0
 [+] Valid Template
 ```

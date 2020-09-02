@@ -17,7 +17,8 @@ Get-PoshTemplate [[-TemplatePath] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-`Get-PoshTemplate` cmdlet returns the object of PoshTemplate structure that can be used with `Invoke-PoshTemplate` cmdlet. It returns a default template object if template path is not provided.
+`Get-PoshTemplate` cmdlet returns the object of PoshTemplate structure that can be used with `Invoke-PoshTemplate` cmdlet. It is assumed that the project template is in current
+path and this cmdlet picks up the tamplate automatically and outputs the template object.
 
 ## EXAMPLES
 
