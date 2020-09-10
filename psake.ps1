@@ -1,7 +1,12 @@
 #install psake
-if (-not (Get-Module -Name "psake" -ListAvailable)) {
-    Write-Output "Installing module [psake]"
-    Install-Module -Name "psake" -SkipPublisherCheck -Scope CurrentUser -Force -Repository PSGallery -AllowClobber
+$Modules = @("psake", "BuildHelpers")
+$Modules | ForEach-Object {
+    if (-not (Get-Module -Name $_ -ListAvailable)) {
+        Write-Output "Installing module [$_]"
+        Install-Module -Name "psake" -SkipPublisherCheck -Scope CurrentUser -Force -Repository PSGallery -AllowClobber
+    }
 }
+
+Import-Module $Modules -Verbose
 
 Invoke-psake -buildFile .\build.ps1 -taskList Init,Build,Test -nologo

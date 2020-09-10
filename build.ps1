@@ -12,7 +12,7 @@ $ProjectRoot = (Split-Path $PSCommandPath)
 
 Task Init {
     #Install dependencies
-    $Dependencies = @("platyPS", "BuildHelpers", "Pester")
+    $Dependencies = @("platyPS", "Pester")
     $Dependencies | ForEach-Object {
         if (-not (Get-Module -ListAvailable $_)) {
             Write-Output "Installing module [$_]"
