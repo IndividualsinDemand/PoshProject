@@ -3,7 +3,7 @@ $Modules = @("psake", "BuildHelpers")
 $Modules | ForEach-Object {
     if (-not (Get-Module -Name $_ -ListAvailable)) {
         Write-Output "Installing module [$_]"
-        Install-Module -Name "psake" -SkipPublisherCheck -Scope CurrentUser -Force -Repository PSGallery -AllowClobber
+        Install-Module -Name $_ -SkipPublisherCheck -Scope CurrentUser -Force -Repository PSGallery -AllowClobber
     }
 }
 
