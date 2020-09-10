@@ -319,7 +319,7 @@ namespace PoshProject
             // Template contents class contains the path to sample files that will be copied to the project folder
             TemplateContents contents = new TemplateContents();
             string _path = contents.AssemblyRootPath;
-            string _currentPath = $"{_path}{contents.CurrentContentsPath}";
+            string _currentPath = $"{_path}{contents.ContentsPath}";
             string modulePath = $"{_currentPath}{contents.ModulePath}";
             string classPath = $"{_currentPath}{contents.ClassPath}";
             string testsPath = $"{_currentPath}{contents.TestsPath}";
