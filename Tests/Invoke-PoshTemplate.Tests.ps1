@@ -24,16 +24,5 @@ Describe "PoshProject" {
             Invoke-PoshTemplate -TemplatePath $TemplatePath
             "$Path\$ProjectName" | Should -Exist
         }
-
-        It "Should custom install the dependencies" {
-            $tem = Get-PoshTemplate -TemplatePath $TemplatePath
-            $tem.Dependencies = "VSTeam"
-            Invoke-PoshTemplate -TemplateObject $tem -CustomInstall
-
-            (Get-Module $tem.Dependencies -ListAvailable).Name | Should -BeLike "VSTeam"
-
-            #remove project
-            Remove-Item -Path "$Path\$ProjectName" -Recurse -Force
-        }
     }
 }
